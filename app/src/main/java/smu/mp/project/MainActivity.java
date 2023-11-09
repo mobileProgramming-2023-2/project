@@ -9,7 +9,7 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import smu.mp.project.alarm.AlarmFragment;
+import smu.mp.project.alarm.list.AlarmFragment;
 import smu.mp.project.home.HomeFragment;
 import smu.mp.project.todo.TodoFragment;
 
