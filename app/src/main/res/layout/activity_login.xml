@@ -21,9 +21,9 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sookmyung"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src="@drawable/img_smu"
         android:layout_marginBottom="30dp" />
 
     <TextView
@@ -63,7 +63,7 @@
         android:id="@+id/loginButton"
         android:layout_width="350dp"
         android:layout_height="50dp"
-        android:background="@drawable/button_background"
+        android:background="@drawable/btn_background"
         android:text="로그인"
         android:textStyle="bold"/>
 </LinearLayout>
