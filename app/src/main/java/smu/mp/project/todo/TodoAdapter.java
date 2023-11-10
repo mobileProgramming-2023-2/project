@@ -31,7 +31,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.todo_item, parent, false);
         }
 
         TextView contentTextView = convertView.findViewById(R.id.content);  // 할 일 내용

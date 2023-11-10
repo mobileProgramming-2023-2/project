@@ -127,7 +127,7 @@ public class TodoFragment extends Fragment {
     // 할 일 입력 Dialog 표시 메소드
     private void showDialog() {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_add_todo, null);
+        View dialogView = inflater.inflate(R.layout.todo_dialog_add, null);
 
         final EditText editTextTodoContent = dialogView.findViewById(R.id.editTextTodoContent);
         final EditText editTextTodoMemo = dialogView.findViewById(R.id.editTextTodoMemo);
