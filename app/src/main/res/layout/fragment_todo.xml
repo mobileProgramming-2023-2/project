@@ -23,14 +23,14 @@
         android:textSize="17sp"
         android:textStyle="bold"/>
 
-    <!-- To Do 항목 리스트 뷰 -->
+    <!-- 할 일 항목 리스트 뷰 -->
     <ListView
         android:id="@+id/todoListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/todoListTitle"/>
 
-    <!-- To Do 항목 추가용 원형 이미지 버튼 -->
+    <!-- 할 일 항목 추가용 원형 이미지 버튼 -->
     <ImageButton
         android:id="@+id/addItemButton"
         android:layout_width="wrap_content"

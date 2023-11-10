@@ -52,7 +52,7 @@
 
         <!-- 할 일 입력창 -->
         <EditText
-            android:id="@+id/editTextTodoTitle"
+            android:id="@+id/editTextTodoContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="할 일을 입력하세요."
