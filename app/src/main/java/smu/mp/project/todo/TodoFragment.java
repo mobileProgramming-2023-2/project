@@ -25,6 +25,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -44,15 +46,21 @@ public class TodoFragment extends Fragment {
     private TodoAdapter adapter;  // 할 일 목록(todoItems)을 ListView에 바인딩하는 어댑터
     private String selectedStartTime; // 시작 시간 저장
     private String selectedEndTime;   // 종료 시간 저장
+    private MaterialCalendarView calendarView;
 
     public TodoFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_todo, container, false);
+
+        // 캘린더 뷰 커스텀
+        calendarView = rootView.findViewById(R.id.calendarView);
+        calendarView.setSelectedDate(CalendarDay.today());
+        calendarView.addDecorators(new SaturdayDecorator(), new SundayDecorator());
+        calendarView.setTitleFormatter(new CustomTitleFormatter());
 
         // 할 일 목록을 ListView에 연결
         todoItems = new ArrayList<>();

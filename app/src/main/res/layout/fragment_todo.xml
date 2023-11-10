@@ -3,27 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <!-- 'To-Do List' 제목 -->
-    <TextView
-        android:id="@+id/mainTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:padding="13dp"
-        android:text="To-Do List"
-        android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:background="@color/mainColor"
-        android:gravity="center"/>
-
     <!-- 캘린더 뷰 -->
-    <CalendarView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mainTitle" />
+        android:paddingTop="10dp"
+        android:layout_alignParentTop="true"
+        app:mcv_selectionColor="#d2dffe"
+        app:mcv_tileSize="54dp"
+        app:mcv_showOtherDates="all"
+        app:mcv_dateTextAppearance="@style/CustomCalendarDateTextAppearance"
+        app:mcv_headerTextAppearance="@style/CustomCalendarHeaderTextAppearance" />
 
     <!-- '오늘의 할 일' 제목 -->
     <TextView
@@ -34,7 +28,7 @@
         android:text="오늘의 할 일"
         android:paddingHorizontal="23dp"
         android:paddingVertical="15dp"
-        android:textSize="17sp"
+        android:textSize="18sp"
         android:textStyle="bold"/>
 
     <!-- 할 일 항목 리스트 뷰 -->
