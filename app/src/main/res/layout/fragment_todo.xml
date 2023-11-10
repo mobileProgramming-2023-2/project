@@ -5,12 +5,25 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- 'To-Do List' 제목 -->
+    <TextView
+        android:id="@+id/mainTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="13dp"
+        android:text="To-Do List"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:background="@color/mainColor"
+        android:gravity="center"/>
+
     <!-- 캘린더 뷰 -->
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
+        android:layout_below="@id/mainTitle" />
 
     <!-- '오늘의 할 일' 제목 -->
     <TextView
