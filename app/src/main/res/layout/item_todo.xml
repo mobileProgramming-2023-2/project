@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 할 일의 내용 -->
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textStyle="bold" />
+
+    <!-- 할 일에 대한 메모 -->
+    <TextView
+        android:id="@+id/memo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- 할 일에 설정된 시간 -->
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
