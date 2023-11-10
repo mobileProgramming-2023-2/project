@@ -9,11 +9,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -31,7 +34,7 @@ import java.util.List;
 
 import smu.mp.project.R;
 
-//TODO: 할 일 밀어서 삭제 및 편집 / 체크박스 초기화 오류 / 할 일 추가 오류 / 날짜별 할 일 추가 기능 / 캘린더 커스텀
+//TODO: 할 일 삭제 및 편집 / 체크박스 초기화 오류 / 할 일 추가 오류 / 날짜별 할 일 추가 기능 / 캘린더 커스텀
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
@@ -41,6 +44,10 @@ public class TodoFragment extends Fragment {
     private TodoAdapter adapter;  // 할 일 목록(todoItems)을 ListView에 바인딩하는 어댑터
     private String selectedStartTime; // 시작 시간 저장
     private String selectedEndTime;   // 종료 시간 저장
+
+    public TodoFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,8 +62,8 @@ public class TodoFragment extends Fragment {
 
         // 할 일 목록 로드
         loadTodoList();
-        
-        // (+)버튼 클릭시 할 일 입력 Dialog 표시
+
+        // (+)버튼 클릭 시 할 일 입력 Dialog 표시
         ImageButton addItemButton = rootView.findViewById(R.id.addItemButton);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +72,56 @@ public class TodoFragment extends Fragment {
             }
         });
 
+        // 할 일 항목 롱클릭 시 삭제/편집 팝업메뉴 표시
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showPopupMenu(view, position);
+                return true;
+            }
+        });
+
         return rootView;
+    }
+
+    // 팝업 메뉴 표시 메소드
+    private void showPopupMenu(View view, final int position) {
+        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.todo_popup_menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId(); // 메뉴 아이템의 ID 가져오기
+
+                if (itemId == R.id.menu_edit) {
+                    // 편집 기능
+                    // position을 사용하여 해당 항목을 편집
+                    editTodoItem(position);
+                    return true;
+                } else if (itemId == R.id.menu_delete) {
+                    // 삭제 기능
+                    // position을 사용하여 해당 항목을 삭제
+                    deleteTodoItem(position);
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        popupMenu.show();
+    }
+
+
+    // 할 일 항목 편집 메소드
+    private void editTodoItem(final int position) {
+        // 편집 로직
+    }
+
+    // 할 일 항목 삭제 메소드
+    private void deleteTodoItem(final int position) {
+        // 삭제 로직
     }
 
     // 할 일 입력 Dialog 표시 메소드
