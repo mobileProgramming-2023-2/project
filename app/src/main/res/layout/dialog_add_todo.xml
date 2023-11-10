@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/todo_btn_check" />
+            android:src="@drawable/todo_btn_ok" />
     </RelativeLayout>
 
     <!-- 내용 부분 -->
