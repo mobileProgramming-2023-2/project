@@ -31,7 +31,7 @@ import java.util.List;
 
 import smu.mp.project.R;
 
-//TODO: 체크박스 및 체크시 줄 / 할 일 삭제 / 할 일 추가 오류 / 할 일 누르면 다이얼로그 / 캘린더 커스텀
+//TODO: 할 일 밀어서 삭제 및 편집 / 체크박스 초기화 오류 / 할 일 추가 오류 / 날짜별 할 일 추가 기능 / 캘린더 커스텀
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {

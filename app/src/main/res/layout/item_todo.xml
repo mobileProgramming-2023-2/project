@@ -3,45 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="6dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="9dp">
 
     <!-- 체크박스 -->
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="40dp"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:layout_gravity="center_vertical"
         android:buttonTint="@color/mainColor" />
 
     <LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:orientation="vertical">
-
-    <!-- 할 일의 내용 -->
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="3dp"
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <!-- 할 일에 대한 메모 -->
-    <TextView
-        android:id="@+id/memo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="11sp"
-        android:textColor="#888888"/>
+        <!-- 할 일의 내용 -->
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-    <!-- 할 일에 설정된 시간 -->
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="match_parent"
+        <!-- 할 일에 대한 메모 -->
+        <TextView
+            android:id="@+id/memo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#AAAAAA"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="11sp"
-        android:textColor="#888888"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- 할 일에 설정된 시작 시간 -->
+        <TextView
+            android:id="@+id/startTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="15sp" />
+
+        <!-- 할 일에 설정된 시간 -->
+        <TextView
+            android:id="@+id/endTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="15sp" />
     </LinearLayout>
 </LinearLayout>
