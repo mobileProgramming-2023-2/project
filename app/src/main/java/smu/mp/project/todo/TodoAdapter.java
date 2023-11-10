@@ -31,24 +31,25 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
 
         TextView contentTextView = convertView.findViewById(R.id.content);  // 할 일 내용
         TextView memoTextView = convertView.findViewById(R.id.memo);  // 할 일 메모
-        TextView timeTextView = convertView.findViewById(R.id.time);  // 할 일 시간
-        CheckBox checkBox = convertView.findViewById(R.id.checkBox);
-        
+        TextView sTimeTextView = convertView.findViewById(R.id.startTime);  // 시작 시간
+        TextView eTimeTextView = convertView.findViewById(R.id.endTime);  // 종료 시간
+        CheckBox checkBox = convertView.findViewById(R.id.checkBox);  // 체크박스
         TodoItem currentItem = getItem(position);
 
         // 할 일 시간 표시 형식 설정
-        String TimeRange;
+        String sTime, eTime;
         if (currentItem.getStartTime() == null && currentItem.getEndTime() == null) {
-            TimeRange = "";  // 시간 모두 선택 안 되어 있으면 빈 문자열로 표시
+            sTime = eTime = "";
         }
         else {
-            TimeRange = currentItem.getStartTime() + " - " + currentItem.getEndTime();
+            sTime = currentItem.getStartTime(); eTime = currentItem.getEndTime();
         }
 
         // 데이터를 각 TextView에 설정
         contentTextView.setText(currentItem.getContent());
         memoTextView.setText(currentItem.getMemo());
-        timeTextView.setText(TimeRange);
+        sTimeTextView.setText(sTime);
+        eTimeTextView.setText(eTime);
 
         // 체크박스 Listener
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
