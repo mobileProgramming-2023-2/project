@@ -30,13 +30,15 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import smu.mp.project.R;
 
-//TODO: 할 일 삭제 및 편집 / 체크박스 초기화 오류 / 할 일 추가 오류 / 날짜별 할 일 추가 기능 / 캘린더 커스텀
+//TODO: 할 일 삭제 및 편집 기능 / 날짜별 할 일 추가 기능 / 체크박스 초기화 오류 / 할 일 추가 오류 / 캘린더 커스텀
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
@@ -46,7 +48,6 @@ public class TodoFragment extends Fragment {
     private TodoAdapter adapter;  // 할 일 목록(todoItems)을 ListView에 바인딩하는 어댑터
     private String selectedStartTime; // 시작 시간 저장
     private String selectedEndTime;   // 종료 시간 저장
-    private MaterialCalendarView calendarView;
 
     public TodoFragment() {
         // Required empty public constructor
@@ -56,11 +57,38 @@ public class TodoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_todo, container, false);
 
-        // 캘린더 뷰 커스텀
-        calendarView = rootView.findViewById(R.id.calendarView);
-        calendarView.setSelectedDate(CalendarDay.today());
-        calendarView.addDecorators(new SaturdayDecorator(), new SundayDecorator());
+        // 캘린더 뷰 커스텀 //
+        MaterialCalendarView calendarView = rootView.findViewById(R.id.calendarView);
+        TextView todoListTitle = rootView.findViewById(R.id.todoListTitle);
+
+        // 데코레이터 인스턴스 생성
+        SaturdayDecorator saturdayDecorator = new SaturdayDecorator();
+        SundayDecorator sundayDecorator = new SundayDecorator();
+        TodayDecorator todayDecorator = new TodayDecorator();
+
+        // 현재 달을 초기 달로 설정
+        int currentMonth = CalendarDay.today().getMonth();
+        saturdayDecorator.setCurrentMonth(currentMonth);
+        sundayDecorator.setCurrentMonth(currentMonth);
+        
+        // 현재 날짜와 요일을 TextView에 설정
+        setFormattedDateText(todoListTitle, CalendarDay.today());
+
+        calendarView.setOnDateChangedListener((widget, date, selected) -> {
+            setFormattedDateText(todoListTitle, date);
+        });
+
+        calendarView.addDecorators(saturdayDecorator, sundayDecorator, todayDecorator);
+        calendarView.invalidateDecorators();
         calendarView.setTitleFormatter(new CustomTitleFormatter());
+
+        // 달력 페이지 변경 리스너
+        calendarView.setOnMonthChangedListener((widget, date) -> {
+            int newMonth = date.getMonth();
+            saturdayDecorator.setCurrentMonth(newMonth);
+            sundayDecorator.setCurrentMonth(newMonth);
+            calendarView.invalidateDecorators(); // 데코레이터 업데이트
+        });
 
         // 할 일 목록을 ListView에 연결
         todoItems = new ArrayList<>();
@@ -92,6 +120,15 @@ public class TodoFragment extends Fragment {
         return rootView;
     }
 
+    // 날짜와 요일을 todoListTitle에 설정하는 메소드
+    private void setFormattedDateText(TextView textView, CalendarDay date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(date.getYear(), date.getMonth() - 1, date.getDay());
+        String dayOfWeek = new SimpleDateFormat("EE", Locale.getDefault()).format(calendar.getTime());
+        String formattedDate = String.format(Locale.getDefault(), "%d.%s TODO", date.getDay(), dayOfWeek);
+        textView.setText(formattedDate);
+    }
+
     // 팝업 메뉴 표시 메소드
     private void showPopupMenu(View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(getActivity(), view);
@@ -120,7 +157,6 @@ public class TodoFragment extends Fragment {
 
         popupMenu.show();
     }
-
 
     // 할 일 항목 편집 메소드
     private void editTodoItem(final int position) {
