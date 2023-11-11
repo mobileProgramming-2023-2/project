@@ -14,10 +14,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 
 import smu.mp.project.R;
+import smu.mp.project.alarm.add.AlarmAddFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,9 +102,16 @@ public class AlarmFragment extends Fragment {
         ImageButton btn_add = (ImageButton) view.findViewById(R.id.btn_add) ;
         btn_add.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                int count = adapter.getCount();
-                items.add(new AlarmItem("LIST" + Integer.toString(count + 1)));
-                adapter.notifyDataSetChanged();
+                // 알람 추가 프래그먼트를 생성하고 화면에 표시
+                AlarmAddFragment alarmAddFragment = new AlarmAddFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, alarmAddFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+//                int count = adapter.getCount();
+//                items.add(new AlarmItem("LIST" + Integer.toString(count + 1)));
+//                adapter.notifyDataSetChanged();
             }
         });
 
@@ -126,5 +135,12 @@ public class AlarmFragment extends Fragment {
         }); **/
 
         return view;
+    }
+
+    //AlarmItem을 리스트에 추가하는 메서드
+    public void addItem(AlarmItem alarmItem){
+        items.add(alarmItem);
+        ArrayAdapter<AlarmItem> adapter = (ArrayAdapter<AlarmItem>) listview.getAdapter();
+        adapter.notifyDataSetChanged();
     }
 }
