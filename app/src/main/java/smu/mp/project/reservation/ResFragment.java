@@ -27,14 +27,13 @@ public class ResFragment extends Fragment {
         MyGridAdapter gAdapter = new MyGridAdapter(getActivity());
         gv.setAdapter(gAdapter);
 
-        // ImageView 참조 얻기
+
         ImageView bannerImage = view.findViewById(R.id.banner);
 
-        // ImageView 클릭 리스너 설정
+
         bannerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 웹 브라우저를 열기 위한 Intent 생성
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snoway.sookmyung.ac.kr/login.jsp"));
                 startActivity(browserIntent);
             }
@@ -91,7 +90,7 @@ public class ResFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(460, 650));
+            imageView.setLayoutParams(new GridView.LayoutParams(400, 550));
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setPadding(5, 5, 10, 10);
 
@@ -101,7 +100,6 @@ public class ResFragment extends Fragment {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // 다이얼로그 생성 및 예약 버튼 클릭 처리
                     View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog, null);
                     AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity());
                     ImageView ivPoster = dialogView.findViewById(R.id.imageViewPoster);

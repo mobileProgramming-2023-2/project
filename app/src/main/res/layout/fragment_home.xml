@@ -18,8 +18,8 @@
 
     <TextView
         android:id="@+id/speechBubble"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:background="@drawable/insta"
         android:layout_marginBottom="400dp"
         android:layout_marginTop="130dp"
