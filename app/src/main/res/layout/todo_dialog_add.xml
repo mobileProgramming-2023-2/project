@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/mainColor">
+
+    <!-- 할 일 입력 Dialog 제목 바 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- 닫기(X) 버튼 -->
+        <ImageButton
+            android:id="@+id/buttonClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/todo_btn_close" />
+
+        <!-- '할 일' 제목 -->
+        <TextView
+            android:id="@+id/todoDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="할 일"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <!-- 확인(체크) 버튼 -->
+        <ImageButton
+            android:id="@+id/buttonCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/todo_btn_ok" />
+    </RelativeLayout>
+
+    <!-- 내용 부분 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#FFFFFF">
+
+        <!-- 할 일 입력창 -->
+        <EditText
+            android:id="@+id/editTextTodoContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="할 일을 입력하세요."
+            android:inputType="textCapSentences"
+            android:padding="15dp"
+            android:drawableLeft="@drawable/todo_ic_face"
+            android:drawablePadding="10dp"
+            android:textSize="17sp"/>
+
+        <!-- 시작 시간 선택 -->
+        <TextView
+            android:id="@+id/textViewStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="시작 시간"
+            android:drawableLeft="@drawable/todo_ic_time"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="15dp"
+            android:drawablePadding="10dp"
+            android:textSize="17sp"/>
+
+        <!-- 종료 시간 선택 -->
+        <TextView
+            android:id="@+id/textViewEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="종료 시간"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="15dp"
+            app:drawableLeftCompat="@drawable/todo_ic_time"
+            android:drawablePadding="10dp"
+            android:textSize="17sp"/>
+
+        <!-- 메모 입력창 -->
+        <EditText
+            android:id="@+id/editTextTodoMemo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/todo_ic_memo"
+            android:hint="메모를 입력하세요."
+            android:padding="15dp"
+            android:inputType="textMultiLine"
+            android:drawablePadding="10dp"
+            android:textSize="17sp"/>
+    </LinearLayout>
+</LinearLayout>

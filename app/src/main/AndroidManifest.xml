@@ -16,6 +16,11 @@
             android:name=".home.SummerAnimation"
             android:exported="false" />
         <activity
+            android:name=".alarm.add.AlarmAddFragment"
+            android:exported="false" />
+        <activity
+            android:name=".alarm.list.ListViewActivity"/>
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity

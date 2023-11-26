@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 String username = editTextUsername.getText().toString();
 
-
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
