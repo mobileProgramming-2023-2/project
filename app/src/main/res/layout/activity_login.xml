@@ -65,5 +65,7 @@
         android:layout_height="50dp"
         android:background="@drawable/button_background"
         android:text="로그인"
-        android:textStyle="bold"/>
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="15dp"/>
 </LinearLayout>
