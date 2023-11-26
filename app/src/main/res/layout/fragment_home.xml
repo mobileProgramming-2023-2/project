@@ -46,7 +46,6 @@
         android:layout_height="1000dp"
         android:src="@drawable/sunshine"
         android:visibility="gone"/>
-<!--        android:layout_gravity="top|right"-->
 
 
 

@@ -84,7 +84,7 @@ public class BookFragment extends Fragment {
             });
         }
 
-        final Button btn = view.findViewById(R.id.buttonPay);
+        final Button btn = view.findViewById(R.id.buttonRes);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
