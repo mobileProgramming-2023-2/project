@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import smu.mp.project.alarm.AlarmFragment;
 import smu.mp.project.home.HomeFragment;
+import smu.mp.project.reservation.ResFragment;
 import smu.mp.project.todo.TodoFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment = new HomeFragment();
     private AlarmFragment alarmFragment = new AlarmFragment();
     private TodoFragment todoFragment = new TodoFragment();
+
+    private ResFragment resFragment = new ResFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
                 switchFragment(todoFragment);
                 return true;
             }
+            else if (itemId == R.id.navigation_res) {
+                switchFragment(resFragment);
+                return true;
+            }
+
             return false;
         });
 
