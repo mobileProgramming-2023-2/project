@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/home"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.HomeFragment">
+    android:background="#FFCBCB"
+    tools:context=".home.HomeFragment"
+    android:layout_marginBottom="56dp">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/characterImage"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="50dp"/>
+
     <TextView
+        android:id="@+id/speechBubble"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/insta"
+        android:layout_marginBottom="400dp"
+        android:layout_marginTop="130dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:padding="10dp"
+        android:text="안녕 나는 눈송이야!"
+        android:gravity="center"
+        android:textSize="18dp"/>
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="HOME"
-        android:textSize="50dp"
-        android:gravity="center"/>
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+
+    <ImageView
+        android:id="@+id/sunImage"
+        android:layout_width="1000dp"
+        android:layout_height="1000dp"
+        android:src="@drawable/sunshine"
+        android:visibility="gone"/>
+
+
 
 </FrameLayout>

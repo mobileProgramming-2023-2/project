@@ -13,4 +13,9 @@
         android:id="@+id/navigation_todo"
         android:icon="@drawable/ic_todo"
         android:title="투두리스트"/>
+
+    <item
+        android:id="@+id/navigation_res"
+        android:icon="@drawable/ic_res"
+        android:title="강연 예약"/>
 </menu>

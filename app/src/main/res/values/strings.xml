@@ -1,3 +1,45 @@
 <resources>
     <string name="app_name">토끼송</string>
+    <string name="show1">인권 초청 강연회</string>
+    <string name="show2">머신러닝 비영리 커뮤니티와 함께 성장하는 SW인플루언서</string>
+    <string name="show3">플러스 학기제</string>
+    <string name="show4">대한항공 객실승무원 채용설명회</string>
+    <string name="show5">숙명 Citizenship Fair 모집</string>
+    <string name="show6">아모레퍼시픽 현직자 멘토링 프로그램</string>
+    <string name="show7">학부 인사이트특강 수강등록</string>
+    <string name="show8">논문작성을 위한 학술DB 사용법</string>
+    <string name="show9">학습컨설팅</string>
+
+    <string name="show1time">2023.10.30(월) 15:30~17:00</string>
+    <string name="show2time">2023.11.30(목) 13:00~14:00</string>
+    <string name="show3time">2023.10.12(목)</string>
+    <string name="show4time">2023.11.21(화) 14:00~17:00</string>
+    <string name="show5time">2023.12.08(금)</string>
+    <string name="show6time">2023.11.29(수)~2024.01.10(수)</string>
+    <string name="show7time">2023.04.26(수)~2023.12.21(목) 23:45</string>
+    <string name="show8time">2023.11.23(목) 16:00~17:00</string>
+    <string name="show9time">2023.09.01(금) 17:00~2024.02.12(월) 17:00</string>
+
+    <string name="show1location">숙명여자대학교 강의실</string>
+    <string name="show2location">창학 B107</string>
+    <string name="show3location">숙명여자대학교 행정관 201호</string>
+    <string name="show4location">숙명여자대학교 진리관 B102호</string>
+    <string name="show5location">비교과통합관리시스템</string>
+    <string name="show6location">숙명여자대학교 강의실</string>
+    <string name="show7location">숙명여자대학교 강의실</string>
+    <string name="show8location">도서관 5층 CC플라자 내 송영숙미디어랩(교육실)</string>
+    <string name="show9location">행파교수회관 102A호</string>
+
+    <string name="show1apply">2023. 09. 27 ~ 2023. 10. 30 15:30</string>
+    <string name="show2apply">2023. 11. 07 ~ 2023. 11. 28 23:45</string>
+    <string name="show3apply">2023. 09. 25 ~ 2023. 10. 12</string>
+    <string name="show4apply">2023. 11. 16 ~ 2023. 11. 21 09:00</string>
+    <string name="show5apply">2023. 11. 01 ~ 2023. 11. 30 17:00</string>
+    <string name="show6apply">2023. 11. 20 ~ 2023. 11. 26 23:45</string>
+    <string name="show7apply">2023. 04. 26 ~ 2023. 12. 20 23:45</string>
+    <string name="show8apply">2023. 10. 24 ~ 2023. 11. 30 09:00</string>
+    <string name="show9apply">2023. 09. 01 ~ 2023. 11. 26 23:45</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
