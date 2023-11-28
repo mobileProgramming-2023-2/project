@@ -13,13 +13,17 @@
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
         <activity
-            android:name=".home.SummerAnimation"
+            android:name=".library.reservationPage.MyGridAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".library.reservationPage.Reservation"
             android:exported="false" />
         <activity
             android:name=".alarm.add.AlarmAddFragment"
             android:exported="false" />
         <activity
-            android:name=".alarm.list.ListViewActivity"/>
+            android:name=".alarm.list.ListViewActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
