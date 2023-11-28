@@ -123,7 +123,7 @@ public class TodoFragment extends Fragment {
     // 날짜와 요일을 todoListTitle에 설정하는 메소드
     private void setFormattedDateText(TextView textView, CalendarDay date) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(date.getYear(), date.getMonth() - 1, date.getDay());
+        calendar.set(date.getYear(), date.getMonth(), date.getDay());
         String dayOfWeek = new SimpleDateFormat("EE", Locale.getDefault()).format(calendar.getTime());
         String formattedDate = String.format(Locale.getDefault(), "%d.%s TODO", date.getDay(), dayOfWeek);
         textView.setText(formattedDate);

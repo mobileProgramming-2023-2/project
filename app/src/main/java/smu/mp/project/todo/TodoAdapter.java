@@ -67,6 +67,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
         });
 
         // 체크박스 Listener
+        final int defaultTextColor = contentTextView.getCurrentTextColor();
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -75,7 +76,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
                     contentTextView.setTextColor(Color.LTGRAY);
                 } else {
                     contentTextView.setPaintFlags(contentTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    contentTextView.setTextColor(Color.BLACK);
+                    contentTextView.setTextColor(defaultTextColor);
                 }
             }
         });
