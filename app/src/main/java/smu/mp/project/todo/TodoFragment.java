@@ -3,7 +3,6 @@ package smu.mp.project.todo;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,12 +34,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import smu.mp.project.R;
 
-//TODO: 할 일 삭제 및 편집 기능 / 날짜별 할 일 추가 기능 / 체크박스 초기화 오류 / 할 일 추가 오류 / 캘린더 커스텀
+//TODO: 스크롤 생성 이후부터 할 일 추가 바로 안됨 / 체크박스 오류 / 할 일 삭제 및 편집 / 토스트 메시지 위치 / 캘린더에 투두 수
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
@@ -48,6 +51,8 @@ public class TodoFragment extends Fragment {
     private TodoAdapter adapter;  // 할 일 목록(todoItems)을 ListView에 바인딩하는 어댑터
     private String selectedStartTime; // 시작 시간 저장
     private String selectedEndTime;   // 종료 시간 저장
+    private String selectedDate;  // 날짜 저장
+    private Map<String, List<TodoItem>> todoMap; // 날짜별 할 일 목록을 저장하는 맵
 
     public TodoFragment() {
         // Required empty public constructor
@@ -70,12 +75,17 @@ public class TodoFragment extends Fragment {
         int currentMonth = CalendarDay.today().getMonth();
         saturdayDecorator.setCurrentMonth(currentMonth);
         sundayDecorator.setCurrentMonth(currentMonth);
-        
+
         // 현재 날짜와 요일을 TextView에 설정
         setFormattedDateText(todoListTitle, CalendarDay.today());
 
+        // 현재 날짜로 selectedDate 초기화
+        selectedDate = formatDate(CalendarDay.today());
+
         calendarView.setOnDateChangedListener((widget, date, selected) -> {
-            setFormattedDateText(todoListTitle, date);
+            selectedDate = formatDate(date); // 날짜를 변경할 때마다 selectedDate 업데이트
+            updateTodoListForSelectedDate(selectedDate); // 해당 날짜에 맞는 할 일 목록 업데이트
+            setFormattedDateText(todoListTitle, date); // 해당 날찌로 TextView에 설정
         });
 
         calendarView.addDecorators(saturdayDecorator, sundayDecorator, todayDecorator);
@@ -119,6 +129,22 @@ public class TodoFragment extends Fragment {
 
         return rootView;
     }
+    
+    // 다시 투두 프래그먼트로 돌아올 때, 오늘 날짜로 재설정
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        CalendarDay today = CalendarDay.today();
+
+        MaterialCalendarView calendarView = getView().findViewById(R.id.calendarView);
+        calendarView.setSelectedDate(today);
+        calendarView.setCurrentDate(today);
+
+        selectedDate = formatDate(today);
+        updateTodoListForSelectedDate(selectedDate);
+        setFormattedDateText((TextView) getView().findViewById(R.id.todoListTitle), today);
+    }
 
     // 날짜와 요일을 todoListTitle에 설정하는 메소드
     private void setFormattedDateText(TextView textView, CalendarDay date) {
@@ -126,6 +152,11 @@ public class TodoFragment extends Fragment {
         calendar.set(date.getYear(), date.getMonth(), date.getDay());
         String dayOfWeek = new SimpleDateFormat("EE", Locale.getDefault()).format(calendar.getTime());
         String formattedDate = String.format(Locale.getDefault(), "%d.%s TODO", date.getDay(), dayOfWeek);
+
+        // 애니메이션 적용
+        Animation slideUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.todo_title);
+        textView.startAnimation(slideUpAnimation);
+
         textView.setText(formattedDate);
     }
 
@@ -178,6 +209,9 @@ public class TodoFragment extends Fragment {
         final TextView textViewStartTime = dialogView.findViewById(R.id.textViewStartTime);
         final TextView textViewEndTime = dialogView.findViewById(R.id.textViewEndTime);
 
+        selectedStartTime = null;
+        selectedEndTime = null;
+
         // Dialog 생성
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setView(dialogView)
@@ -199,8 +233,6 @@ public class TodoFragment extends Fragment {
             public void onClick(View v) {
                 String content = editTextTodoContent.getText().toString();
                 String memo = editTextTodoMemo.getText().toString();
-                String startTime = textViewStartTime.getText().toString();
-                String endTime = textViewEndTime.getText().toString();
 
                 // 예외 처리
                 if (content.isEmpty()) {  // 할 일 내용 비어 있으면 경고
@@ -209,8 +241,7 @@ public class TodoFragment extends Fragment {
                             .setMessage("할 일을 입력하세요.")
                             .setPositiveButton("확인", null) //
                             .show();
-                }
-                else if ((selectedStartTime == null && selectedEndTime != null) ||
+                } else if ((selectedStartTime == null && selectedEndTime != null) ||
                         (selectedStartTime != null && selectedEndTime == null)) {  // 시간이 하나만 선택되어 있으면 경고
                     new AlertDialog.Builder(getContext())
                             .setTitle("경고")
@@ -218,12 +249,18 @@ public class TodoFragment extends Fragment {
                             .setPositiveButton("확인", null)
                             .show();
                 } else {  // 모든 입력이 제대로 되어 있으면 할 일 항목 추가
-                    TodoItem newItem = new TodoItem(content, memo, selectedStartTime, selectedEndTime);
-                    todoItems.add(newItem);
+                    TodoItem newItem = new TodoItem(content, memo, selectedStartTime, selectedEndTime, selectedDate);
+                    List<TodoItem> itemsForDate = todoMap.getOrDefault(selectedDate, new ArrayList<>());
+                    itemsForDate.add(newItem);
+                    todoMap.put(selectedDate, itemsForDate);
                     saveTodoList();
+
+                    updateTodoListForSelectedDate(selectedDate);
                     adapter.notifyDataSetChanged();
+
                     // 할 일 추가 확인 메세지
                     Toast.makeText(getContext(), "할 일이 추가되었습니다", Toast.LENGTH_SHORT).show();
+
                     dialog.dismiss();
                 }
             }
@@ -276,46 +313,46 @@ public class TodoFragment extends Fragment {
                     }
                 }, hour, minute, false);
 
-        // '취소' 버튼 Listener
-        timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if(timeTextView.getId() == R.id.textViewStartTime) {
-                    selectedStartTime = null;
-                } else if(timeTextView.getId() == R.id.textViewEndTime) {
-                    selectedEndTime = null;
-                }
-            }
-        });
-
+        timePickerDialog.setCancelable(false);
         timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         timePickerDialog.show();
     }
 
-    // 할 일 목록을 SharedPreferences에 저장하는 메소드
+    // 날짜를 String 형태로 포맷팅하는 메소드
+    private String formatDate(CalendarDay date) {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date.getDate());
+    }
+
+    // 선택된 날짜에 맞는 할 일 목록을 업데이트하는 메소드
+    private void updateTodoListForSelectedDate(String date) {
+        List<TodoItem> itemsForDate = todoMap.getOrDefault(date, new ArrayList<>());
+        adapter.clear();
+        adapter.addAll(itemsForDate);
+        adapter.notifyDataSetChanged();
+    }
+
+    // 할 일 목록을 저장하는 메소드
     private void saveTodoList() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_TODO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         Gson gson = new Gson();
-        String todoListJson = gson.toJson(todoItems);  // Gson 라이브러리 사용하여 할 일 목록을 JSON 형태로 변환
-        editor.putString(KEY_TODO_LIST, todoListJson);  // JSON 문자열을 SharedPreferences에 저장
+        String todoMapJson = gson.toJson(todoMap); // todoMap을 JSON으로 변환
+        editor.putString(KEY_TODO_LIST, todoMapJson);
         editor.apply();
-
-        adapter.notifyDataSetChanged();
     }
 
-    // 할 일 목록을 SharedPreferences에서 로드하는 메소드
+    // 할 일 목록을 불러오는 메소드
     private void loadTodoList() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_TODO, Context.MODE_PRIVATE);
-        String todoListJson = sharedPreferences.getString(KEY_TODO_LIST, "");
-
-        // JSON 비어있지 않으면 파싱하여 할 일 목록에 할당
-        if (!todoListJson.isEmpty() && todoItems.isEmpty()) {
+        String todoMapJson = sharedPreferences.getString(KEY_TODO_LIST, "");
+        if (!todoMapJson.isEmpty()) {
             Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<TodoItem>>() {}.getType();
-            todoItems = gson.fromJson(todoListJson, type);
-            adapter.addAll(todoItems);
+            Type type = new TypeToken<Map<String, List<TodoItem>>>() {}.getType();
+            todoMap = gson.fromJson(todoMapJson, type); // JSON을 Map으로 변환
+        } else {
+            todoMap = new HashMap<>();
         }
+        updateTodoListForSelectedDate(selectedDate);
     }
 }

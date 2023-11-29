@@ -22,13 +22,25 @@
     <!-- '오늘의 할 일' 제목 -->
     <TextView
         android:id="@+id/todoListTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/calendarView"
         android:paddingHorizontal="23dp"
         android:paddingVertical="15dp"
         android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_alignParentStart="true"/>
+
+    <!-- 할 일 항목 추가용 원형 이미지 버튼 -->
+    <ImageButton
+        android:id="@+id/addItemButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@id/todoListTitle"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/todo_btn_add_circle"
+        android:background="?attr/selectableItemBackgroundBorderless" />
 
     <!-- 할 일 항목 리스트 뷰 -->
     <ListView
@@ -37,17 +49,5 @@
         android:layout_height="match_parent"
         android:layout_below="@id/todoListTitle"
         tools:ignore="MissingClass" />
-
-    <!-- 할 일 항목 추가용 원형 이미지 버튼 -->
-    <ImageButton
-        android:id="@+id/addItemButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="70dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/todo_btn_add_circle" />
 
 </RelativeLayout>

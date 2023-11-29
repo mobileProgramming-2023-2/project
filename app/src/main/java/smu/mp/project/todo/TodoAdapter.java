@@ -21,6 +21,7 @@ import smu.mp.project.R;
 // 할 일(TodoItem) 목록을 ListView에 바인딩하는 클래스
 public class TodoAdapter extends ArrayAdapter<TodoItem> {
     private Context context;
+
     // 생성자
     public TodoAdapter(Context context, List<TodoItem> items) {
         super(context, 0, items);
@@ -42,14 +43,8 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
         TodoItem currentItem = getItem(position);
 
         // 할 일 시간 표시 형식 설정
-        String sTime, eTime;
-        if (currentItem.getStartTime() == null && currentItem.getEndTime() == null) {
-            sTime = eTime = "";
-        }
-        else {
-            sTime = currentItem.getStartTime();
-            eTime = currentItem.getEndTime();
-        }
+        String sTime = (currentItem.getStartTime() != null) ? currentItem.getStartTime() : "";
+        String eTime = (currentItem.getEndTime() != null) ? currentItem.getEndTime() : "";
 
         // 데이터를 각 TextView에 설정
         contentTextView.setText(currentItem.getContent());
