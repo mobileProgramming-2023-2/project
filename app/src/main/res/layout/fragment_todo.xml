@@ -48,6 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/todoListTitle"
+        android:paddingBottom="56dp"
+        android:clipToPadding="false"
         tools:ignore="MissingClass" />
 
 </RelativeLayout>

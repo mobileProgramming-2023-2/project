@@ -41,7 +41,7 @@ import java.util.Map;
 
 import smu.mp.project.R;
 
-//TODO: 스크롤 생성 이후부터 할 일 추가 바로 안됨 / 체크박스 오류 / 할 일 삭제 및 편집 / 토스트 메시지 위치 / 캘린더에 투두 수
+//TODO: 체크박스 오류 / 할 일 삭제 및 편집 / 캘린더에 투두 수
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
@@ -258,10 +258,10 @@ public class TodoFragment extends Fragment {
                     updateTodoListForSelectedDate(selectedDate);
                     adapter.notifyDataSetChanged();
 
+                    dialog.dismiss();
+
                     // 할 일 추가 확인 메세지
                     Toast.makeText(getContext(), "할 일이 추가되었습니다", Toast.LENGTH_SHORT).show();
-
-                    dialog.dismiss();
                 }
             }
         });
