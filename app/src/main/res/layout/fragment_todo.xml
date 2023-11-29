@@ -31,16 +31,19 @@
         android:textStyle="bold"
         android:layout_alignParentStart="true"/>
 
-    <!-- 할 일 항목 추가용 원형 이미지 버튼 -->
-    <ImageButton
+    <!-- 할 일 추가용 원형 버튼 -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_input_add"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@id/todoListTitle"
-        android:layout_marginEnd="15dp"
-        android:src="@drawable/todo_btn_add_circle"
-        android:background="?attr/selectableItemBackgroundBorderless" />
+        android:layout_alignTop="@id/todoListTitle"
+        android:layout_marginEnd="13dp"
+        app:elevation="9dp"
+        app:fabCustomSize="56dp"
+        app:backgroundTint="@color/mainColor"
+        app:tint="#FFFFFF"/>
 
     <!-- 할 일 항목 리스트 뷰 -->
     <ListView
