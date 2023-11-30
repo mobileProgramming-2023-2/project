@@ -46,23 +46,30 @@ import smu.mp.project.R;
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
+    // Preference 파일과 키 이름 정의
     private static final String PREFS_TODO = "prefs_todo";
     private static final String KEY_TODO_LIST = "todo_list";
-    private List<TodoItem> todoItems;  // 할 일 항목 저장하는 리스트
-    private TodoAdapter adapter;  // 할 일 목록(todoItems)을 ListView에 바인딩하는 어댑터
-    private String selectedStartTime; // 시작 시간 저장
-    private String selectedEndTime;   // 종료 시간 저장
-    private String selectedDate;  // 날짜 저장
+
+    // 할 일 목록과 관련된 변수들
+    private List<TodoItem> todoItems;  // 할 일 항목을 저장하는 리스트
+    private TodoAdapter adapter;  // 할 일 목록을 ListView에 바인딩하는 어댑터
     private Map<String, List<TodoItem>> todoMap; // 날짜별 할 일 목록을 저장하는 맵
 
+    // 사용자가 선택한 시간과 날짜를 저장하는 변수들
+    private String selectedStartTime; // 선택한 시작 시간
+    private String selectedEndTime;   // 선택한 종료 시간
+    private String selectedDate;      // 선택한 날짜
+
+    // 기본 생성자
     public TodoFragment() {
-        // Required empty public constructor
     }
 
+    // 할 일 항목 삭제 리스너 인터페이스
     public interface TodoItemDeleteListener {
         void onDeleteTodoItem(int position);
     }
 
+    // 할 일 항목 삭제 리스너 구현
     private TodoItemDeleteListener deleteListener = this::deleteTodoItem;
 
     @Override
@@ -221,6 +228,8 @@ public class TodoFragment extends Fragment {
             itemsForDate.remove(position);
             saveTodoList();
             updateTodoListForSelectedDate(selectedDate);
+
+            Toast.makeText(getContext(), "할 일이 삭제되었습니다", Toast.LENGTH_SHORT).show();
         }
     }
 
