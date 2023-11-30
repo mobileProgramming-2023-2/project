@@ -59,6 +59,12 @@ public class TodoFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public interface TodoItemDeleteListener {
+        void onDeleteTodoItem(int position);
+    }
+
+    private TodoItemDeleteListener deleteListener = this::deleteTodoItem;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_todo, container, false);
@@ -103,7 +109,7 @@ public class TodoFragment extends Fragment {
 
         // 할 일 목록을 ListView에 연결
         todoItems = new ArrayList<>();
-        adapter = new TodoAdapter(getActivity(), todoItems);
+        adapter = new TodoAdapter(getActivity(), todoItems, deleteListener);
         ListView listView = rootView.findViewById(R.id.todoListView);
         listView.setAdapter(adapter);
 
@@ -210,7 +216,12 @@ public class TodoFragment extends Fragment {
 
     // 할 일 항목 삭제 메소드
     private void deleteTodoItem(final int position) {
-        // 삭제 로직
+        List<TodoItem> itemsForDate = todoMap.get(selectedDate);
+        if (itemsForDate != null && position < itemsForDate.size()) {
+            itemsForDate.remove(position);
+            saveTodoList();
+            updateTodoListForSelectedDate(selectedDate);
+        }
     }
 
     // 할 일 입력 Dialog 표시 메소드

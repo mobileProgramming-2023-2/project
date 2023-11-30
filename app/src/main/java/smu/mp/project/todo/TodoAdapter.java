@@ -21,11 +21,13 @@ import smu.mp.project.R;
 // 할 일(TodoItem) 목록을 ListView에 바인딩하는 클래스
 public class TodoAdapter extends ArrayAdapter<TodoItem> {
     private Context context;
+    private TodoFragment.TodoItemDeleteListener deleteListener;
 
     // 생성자
-    public TodoAdapter(Context context, List<TodoItem> items) {
+    public TodoAdapter(Context context, List<TodoItem> items, TodoFragment.TodoItemDeleteListener listener) {
         super(context, 0, items);
         this.context = context;
+        this.deleteListener = listener;
     }
 
     // 각 TodoItem의 뷰를 반환하는 메소드
@@ -95,7 +97,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
                     return true;
                 } else if (itemId == R.id.menu_delete) {
                     // 삭제 기능
-                    Toast.makeText(context, "삭제 선택", Toast.LENGTH_SHORT).show();
+                    deleteListener.onDeleteTodoItem(position);
                     return true;
                 }
 
