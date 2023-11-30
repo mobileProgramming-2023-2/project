@@ -1,6 +1,13 @@
 package smu.mp.project.alarm.list;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,15 +24,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import smu.mp.project.R;
 import smu.mp.project.alarm.add.AlarmAddFragment;
+import smu.mp.project.alarm.add.AlarmReceiver;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AlarmFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class AlarmFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
@@ -36,6 +46,9 @@ public class AlarmFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    private TextView batteryInfoTextView;
+    private BroadcastReceiver batteryLevelReceiver;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -115,32 +128,70 @@ public class AlarmFragment extends Fragment {
             }
         });
 
-        /**
-        Button btn_delete = (Button) view.findViewById(R.id.btn_delete) ;
-        btn_delete.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                int count, checked ;
-                count = adapter.getCount() ;
-
-                if (count > 0) {
-                    checked = listview.getCheckedItemPosition();
-
-                    if (checked > -1 && checked < count) {
-                        items.remove(checked) ;
-                        listview.clearChoices();
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        }); **/
+        batteryInfoTextView = view.findViewById(R.id.batteryInfoTextView);
+        setupBatteryInfoReceiver();
 
         return view;
     }
 
-    //AlarmItem을 리스트에 추가하는 메서드
-    public void addItem(AlarmItem alarmItem){
+    private void setupBatteryInfoReceiver() {
+        batteryLevelReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+                int batteryPct = level * 100 / (int)scale;
+                batteryInfoTextView.setText("Battery Level: " + batteryPct + "%");
+
+                // 배터리 수준에 따라 색상 변경 (채도가 낮춰진 색상)
+                if (batteryPct >= 50) {
+                    batteryInfoTextView.setTextColor(Color.parseColor("#4CAF50"));
+                } else if (batteryPct >= 20) {
+                    batteryInfoTextView.setTextColor(Color.parseColor("#FFEB3B"));
+                } else {
+                    batteryInfoTextView.setTextColor(Color.parseColor("#F44336"));
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(batteryLevelReceiver);
+    }
+
+    // AlarmItem을 리스트에 추가하고 알람을 설정하는 메서드
+    public void addItem(AlarmItem alarmItem) {
         items.add(alarmItem);
         ArrayAdapter<AlarmItem> adapter = (ArrayAdapter<AlarmItem>) listview.getAdapter();
         adapter.notifyDataSetChanged();
+
+        setAlarm(alarmItem.getTime());
+    }
+
+    // 알람을 설정하는 메서드
+    private void setAlarm(String time) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+
+        String[] timeParts = time.split(":");
+        int hour = Integer.parseInt(timeParts[0]);
+        int minute = Integer.parseInt(timeParts[1]);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 }
