@@ -40,7 +40,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/todoListTitle"
         android:layout_marginEnd="13dp"
-        app:elevation="9dp"
+        app:elevation="5dp"
         app:fabCustomSize="56dp"
         app:backgroundTint="@color/mainColor"
         app:tint="#FFFFFF"/>
@@ -54,5 +54,18 @@
         android:paddingBottom="56dp"
         android:clipToPadding="false"
         tools:ignore="MissingClass" />
+
+    <!-- '오늘' 버튼 -->
+    <Button
+        android:id="@+id/todayButton"
+        android:layout_width="65dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:text="오늘"
+        android:textSize="15sp"
+        android:elevation="10dp"
+        android:background="@drawable/todo_btn_today" />
 
 </RelativeLayout>

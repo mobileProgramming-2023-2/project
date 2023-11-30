@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -41,7 +42,7 @@ import java.util.Map;
 
 import smu.mp.project.R;
 
-//TODO: 체크박스 오류 / 할 일 삭제 및 편집 / 캘린더에 투두 수
+//TODO: 스크롤 내린 상태 유지 오류 / 체크박스 오류 / 할 일 삭제 및 편집 / 캘린더에 투두 수
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
@@ -109,6 +110,15 @@ public class TodoFragment extends Fragment {
         // 할 일 목록 로드
         loadTodoList();
 
+        // '오늘' 버튼 클릭 시 오늘 날짜로 재설정
+        Button todayButton = rootView.findViewById(R.id.todayButton); 
+        todayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateForToday();
+            }
+        });
+
         // (+)버튼 클릭 시 할 일 입력 Dialog 표시
         ImageButton addItemButton = rootView.findViewById(R.id.addItemButton);
         addItemButton.setOnClickListener(new View.OnClickListener() {
@@ -129,12 +139,9 @@ public class TodoFragment extends Fragment {
 
         return rootView;
     }
-    
-    // 다시 투두 프래그먼트로 돌아올 때, 오늘 날짜로 재설정
-    @Override
-    public void onResume() {
-        super.onResume();
 
+    // 오늘 날짜로 재설정
+    private void updateForToday() {
         CalendarDay today = CalendarDay.today();
 
         MaterialCalendarView calendarView = getView().findViewById(R.id.calendarView);
@@ -144,6 +151,13 @@ public class TodoFragment extends Fragment {
         selectedDate = formatDate(today);
         updateTodoListForSelectedDate(selectedDate);
         setFormattedDateText((TextView) getView().findViewById(R.id.todoListTitle), today);
+    }
+
+    // 다른 fragment에서 투두로 복귀할 때
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateForToday();
     }
 
     // 날짜와 요일을 todoListTitle에 설정하는 메소드
