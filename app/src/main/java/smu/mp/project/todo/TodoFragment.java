@@ -78,7 +78,25 @@ public class TodoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_todo, container, false);
 
-        // 캘린더 뷰 커스텀 //
+        // 캘린더 뷰 커스텀
+        initializeCalendarView(rootView);
+
+        // 할 일 목록을 ListView에 연결
+        initializeTodoListView(rootView);
+
+        // '오늘' 버튼 클릭 시 오늘 날짜로 재설정
+        Button todayButton = rootView.findViewById(R.id.todayButton);
+        todayButton.setOnClickListener(v -> updateForToday());
+
+        // (+)버튼 클릭 시 할 일 입력 Dialog 표시
+        ImageButton addItemButton = rootView.findViewById(R.id.addItemButton);
+        addItemButton.setOnClickListener(v -> showDialog());
+
+        return rootView;
+    }
+
+    // 캘린더 뷰 초기화
+    private void initializeCalendarView(View rootView) {
         MaterialCalendarView calendarView = rootView.findViewById(R.id.calendarView);
         TextView todoListTitle = rootView.findViewById(R.id.todoListTitle);
 
@@ -115,35 +133,19 @@ public class TodoFragment extends Fragment {
             sundayDecorator.setCurrentMonth(newMonth);
             calendarView.invalidateDecorators(); // 데코레이터 업데이트
         });
+    }
 
-        // 할 일 목록을 ListView에 연결
+    // 할 일 목록을 표시하는 ListView를 초기화하는 메소드
+    private void initializeTodoListView(View rootView) {
+        // 할 일 목록과 어댑터 초기화
         todoItems = new ArrayList<>();
         adapter = new TodoAdapter(getActivity(), todoItems, deleteListener, editListener);
+
+        // ListView 참조 및 어댑터 설정
         ListView listView = rootView.findViewById(R.id.todoListView);
         listView.setAdapter(adapter);
 
-        // 할 일 목록 로드
-        loadTodoList();
-
-        // '오늘' 버튼 클릭 시 오늘 날짜로 재설정
-        Button todayButton = rootView.findViewById(R.id.todayButton); 
-        todayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateForToday();
-            }
-        });
-
-        // (+)버튼 클릭 시 할 일 입력 Dialog 표시
-        ImageButton addItemButton = rootView.findViewById(R.id.addItemButton);
-        addItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
-            }
-        });
-
-        // 할 일 항목 롱클릭 시 삭제/편집 팝업메뉴 표시
+        // 할 일 목록에 롱 클릭 리스너 설정
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -152,7 +154,8 @@ public class TodoFragment extends Fragment {
             }
         });
 
-        return rootView;
+        // 저장된 할 일 목록 로드
+        loadTodoList();
     }
 
     // 오늘 날짜로 재설정
@@ -168,7 +171,7 @@ public class TodoFragment extends Fragment {
         setFormattedDateText((TextView) getView().findViewById(R.id.todoListTitle), today);
     }
 
-    // 다른 fragment에서 투두로 복귀할 때
+    // 다른 fragment로부터 복귀 시 오늘 날짜로 설정
     @Override
     public void onResume() {
         super.onResume();
@@ -218,7 +221,7 @@ public class TodoFragment extends Fragment {
         popupMenu.show();
     }
 
-    // Method to edit a Todoitem
+   // 할 일 항목 편집 메소드
     private void editTodoItem(final int position) {
         List<TodoItem> itemsForDate = todoMap.get(selectedDate);
         if (itemsForDate == null || position >= itemsForDate.size()) {
