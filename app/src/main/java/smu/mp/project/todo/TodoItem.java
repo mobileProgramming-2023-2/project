@@ -31,4 +31,24 @@ public class TodoItem {
     public String getEndTime() { return endTime; }
 
     public String getDate() {return date; }
+
+    // Setter for content
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    // Setter for memo
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    // Setter for startTime
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    // Setter for endTime
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 }

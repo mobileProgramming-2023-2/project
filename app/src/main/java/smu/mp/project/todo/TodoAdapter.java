@@ -12,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -22,12 +21,14 @@ import smu.mp.project.R;
 public class TodoAdapter extends ArrayAdapter<TodoItem> {
     private Context context;
     private TodoFragment.TodoItemDeleteListener deleteListener;
+    private TodoFragment.TodoItemEditListener editListener;
 
     // 생성자
-    public TodoAdapter(Context context, List<TodoItem> items, TodoFragment.TodoItemDeleteListener listener) {
+    public TodoAdapter(Context context, List<TodoItem> items, TodoFragment.TodoItemDeleteListener deleteListener, TodoFragment.TodoItemEditListener editListener) {
         super(context, 0, items);
         this.context = context;
-        this.deleteListener = listener;
+        this.deleteListener = deleteListener;
+        this.editListener = editListener;
     }
 
     // 각 TodoItem의 뷰를 반환하는 메소드
@@ -93,7 +94,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
 
                 if (itemId == R.id.menu_edit) {
                     // 편집 기능
-                    Toast.makeText(context, "편집 선택", Toast.LENGTH_SHORT).show();
+                    editListener.onEditTodoItem(position);
                     return true;
                 } else if (itemId == R.id.menu_delete) {
                     // 삭제 기능

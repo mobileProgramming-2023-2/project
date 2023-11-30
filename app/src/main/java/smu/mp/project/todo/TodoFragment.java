@@ -60,17 +60,19 @@ public class TodoFragment extends Fragment {
     private String selectedEndTime;   // 선택한 종료 시간
     private String selectedDate;      // 선택한 날짜
 
-    // 기본 생성자
-    public TodoFragment() {
-    }
-
     // 할 일 항목 삭제 리스너 인터페이스
     public interface TodoItemDeleteListener {
         void onDeleteTodoItem(int position);
     }
 
-    // 할 일 항목 삭제 리스너 구현
+    // 할 일 항목 편집 리스너 인터페이스
+    public interface TodoItemEditListener {
+        void onEditTodoItem(int position);
+    }
+
+    // 할 일 항목 삭제 및 편집 리스너 구현
     private TodoItemDeleteListener deleteListener = this::deleteTodoItem;
+    private TodoItemEditListener editListener = this::editTodoItem;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,7 +118,7 @@ public class TodoFragment extends Fragment {
 
         // 할 일 목록을 ListView에 연결
         todoItems = new ArrayList<>();
-        adapter = new TodoAdapter(getActivity(), todoItems, deleteListener);
+        adapter = new TodoAdapter(getActivity(), todoItems, deleteListener, editListener);
         ListView listView = rootView.findViewById(R.id.todoListView);
         listView.setAdapter(adapter);
 
@@ -216,9 +218,91 @@ public class TodoFragment extends Fragment {
         popupMenu.show();
     }
 
-    // 할 일 항목 편집 메소드
+    // Method to edit a Todoitem
     private void editTodoItem(final int position) {
-        // 편집 로직
+        List<TodoItem> itemsForDate = todoMap.get(selectedDate);
+        if (itemsForDate == null || position >= itemsForDate.size()) {
+            return;
+        }
+        TodoItem itemToEdit = itemsForDate.get(position);
+
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.todo_dialog_add, null);
+
+        final EditText editTextTodoContent = dialogView.findViewById(R.id.editTextTodoContent);
+        final EditText editTextTodoMemo = dialogView.findViewById(R.id.editTextTodoMemo);
+        final TextView textViewStartTime = dialogView.findViewById(R.id.textViewStartTime);
+        final TextView textViewEndTime = dialogView.findViewById(R.id.textViewEndTime);
+
+        editTextTodoContent.setText(itemToEdit.getContent());
+        editTextTodoMemo.setText(itemToEdit.getMemo());
+
+        // 시작 및 종료 시간 설정
+        if (itemToEdit.getStartTime() != null && !itemToEdit.getStartTime().isEmpty()) {
+            textViewStartTime.setText(itemToEdit.getStartTime());
+        }
+        else {
+            textViewStartTime.setText("시작 시간");
+        }
+
+        if (itemToEdit.getEndTime() != null && !itemToEdit.getEndTime().isEmpty()) {
+            textViewEndTime.setText(itemToEdit.getEndTime());
+        }
+        else {
+            textViewEndTime.setText("종료 시간");
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setView(dialogView)
+                .create();
+
+        ImageButton closeButton = dialogView.findViewById(R.id.buttonClose);
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        ImageButton checkButton = dialogView.findViewById(R.id.buttonCheck);
+        checkButton.setOnClickListener(v -> {
+            String content = editTextTodoContent.getText().toString();
+            String memo = editTextTodoMemo.getText().toString();
+            String startTime = textViewStartTime.getText().toString();
+            String endTime = textViewEndTime.getText().toString();
+
+            if (content.isEmpty()) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("경고")
+                        .setMessage("할 일을 입력하세요.")
+                        .setPositiveButton("확인", null)
+                        .show();
+                return;
+            }
+
+            // 예외 처리: 시작 시간과 종료 시간 중 하나만 설정된 경우
+            if ((startTime.equals("시작 시간") && !endTime.equals("종료 시간")) ||
+                    (!startTime.equals("시작 시간") && endTime.equals("종료 시간"))) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("경고")
+                        .setMessage("시간을 모두 선택해주세요.")
+                        .setPositiveButton("확인", null)
+                        .show();
+                return;
+            }
+
+            // 할 일 항목 업데이트
+            itemToEdit.setContent(content);
+            itemToEdit.setMemo(memo);
+            itemToEdit.setStartTime(startTime.equals("시작 시간") ? null : startTime);
+            itemToEdit.setEndTime(endTime.equals("종료 시간") ? null : endTime);
+
+            saveTodoList();
+            updateTodoListForSelectedDate(selectedDate);
+
+            dialog.dismiss();
+            Toast.makeText(getContext(), "할 일이 편집되었습니다.", Toast.LENGTH_SHORT).show();
+        });
+
+        textViewStartTime.setOnClickListener(v -> showTimePickerDialog(textViewStartTime));
+        textViewEndTime.setOnClickListener(v -> showTimePickerDialog(textViewEndTime));
+
+        dialog.show();
     }
 
     // 할 일 항목 삭제 메소드
@@ -229,7 +313,7 @@ public class TodoFragment extends Fragment {
             saveTodoList();
             updateTodoListForSelectedDate(selectedDate);
 
-            Toast.makeText(getContext(), "할 일이 삭제되었습니다", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "할 일이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -295,7 +379,7 @@ public class TodoFragment extends Fragment {
                     dialog.dismiss();
 
                     // 할 일 추가 확인 메세지
-                    Toast.makeText(getContext(), "할 일이 추가되었습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "할 일이 추가되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
