@@ -21,6 +21,8 @@ import smu.mp.project.R;
 
 public class HomeFragment extends Fragment {
 
+    private SpringAnimation springAnimation;
+
     private String[] quotes = {
             "1퍼센트의 가능성, 그것이 나의 길이다.",
             "하루하루를 마지막이라고 생각하라.\n 그러면 예측할 수 없는 시간은 \n 그대에게 더 많은 시간을 줄 것이다.",
@@ -38,6 +40,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        FrameLayout homeLayout = view.findViewById(R.id.home);
+        springAnimation = new SpringAnimation(getContext(), homeLayout); // 인스턴스 초기화
+
 
         TextView speechBubble = view.findViewById(R.id.speechBubble);
         String randomQuote = getRandomQuote();
@@ -56,7 +61,7 @@ public class HomeFragment extends Fragment {
         updateSeasonView(view, currentSeason);
 
 
-        FrameLayout homeLayout = view.findViewById(R.id.home);
+        //FrameLayout homeLayout = view.findViewById(R.id.home);
         registerForContextMenu(homeLayout);
         registerForContextMenu(characterImage);
 
@@ -72,6 +77,7 @@ public class HomeFragment extends Fragment {
         lottieAnimationView.cancelAnimation();
         lottieAnimationView.setVisibility(View.GONE);
         SummerAnimation.stopSunRotation(sunImage);
+        springAnimation.stopAnimation();
         speechBubble.getBackground().setAlpha(180);
 
         switch (season) {
@@ -79,6 +85,7 @@ public class HomeFragment extends Fragment {
                 view.setBackgroundResource(R.drawable.spring_background);
                 characterImage.setImageResource(R.drawable.spring_character);
                 speechBubble.setTextColor(Color.BLACK);
+                springAnimation.startAnimation();
                 break;
             case "여름":
                 view.setBackgroundResource(R.drawable.summer_background);
@@ -93,6 +100,7 @@ public class HomeFragment extends Fragment {
                 lottieAnimationView.setVisibility(View.VISIBLE);
                 lottieAnimationView.setAnimation(R.raw.autumnanimation);
                 lottieAnimationView.setRepeatCount(ValueAnimator.INFINITE);
+                lottieAnimationView.setSpeed(0.8f);
                 lottieAnimationView.playAnimation();
                 break;
             case "겨울":
