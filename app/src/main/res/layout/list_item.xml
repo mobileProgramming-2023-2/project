@@ -1,24 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
+<layout>
+    <data>
+        <variable
+            name="alarmItem"
+            type="smu.mp.project.alarm.list.AlarmItem" />
+    </data>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="30sp"
-        android:layout_marginLeft="35sp"
-        android:text="Time"/>
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-    <ImageButton
-        android:id="@+id/deleteButton"
-        android:layout_width="40sp"
-        android:layout_height="50sp"
-        android:layout_marginLeft="35sp"
-        android:src="@drawable/delete"
-        android:scaleType="fitCenter"/>
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:layout_marginLeft="5sp"
+                android:text="@{alarmItem.hour &gt;= 10 ? String.valueOf(alarmItem.hour)+'시' : '0'+String.valueOf(alarmItem.hour)+'시'}"/>
+
+            <TextView
+                android:id="@+id/minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="30sp"
+                android:layout_marginLeft="5sp"
+                android:text="@{alarmItem.minute &gt;= 10 ? String.valueOf(alarmItem.minute)+'분' : '0'+String.valueOf(alarmItem.minute)+'분'}"/>
+
+        </LinearLayout>
+
+
+
+        <Switch
+            android:id="@+id/totalSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/deleteButton"-->
+<!--            android:layout_width="40sp"-->
+<!--            android:layout_height="50sp"-->
+<!--            android:layout_marginLeft="35sp"-->
+<!--            android:src="@drawable/delete"-->
+<!--            android:scaleType="fitCenter"/>-->
+    </LinearLayout>
+</layout>
