@@ -1,8 +1,12 @@
 package smu.mp.project.alarm.list;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +45,8 @@ public class AlarmFragment extends Fragment {
     AlarmAdapter alarmAdapter;
     TextView noAlarmText;
 
+    private TextView batteryInfoTextView;
+    private BroadcastReceiver batteryLevelReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +84,9 @@ public class AlarmFragment extends Fragment {
             String requestMsg = alarmItem.isTotalFlag() ? "reboot" : "cancel";
             updateAlarmManager(alarmItem, requestMsg);
         });
+
+        batteryInfoTextView = view.findViewById(R.id.batteryInfoTextView);
+        setupBatteryInfoReceiver();
 
         return view;
     }
@@ -179,6 +188,40 @@ public class AlarmFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    private void setupBatteryInfoReceiver() {
+        batteryLevelReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+                int batteryPct = level * 100 / (int)scale;
+                batteryInfoTextView.setText("Battery Level: " + batteryPct + "%");
+
+                // 배터리 수준에 따라 색상 변경 (채도가 낮춰진 색상)
+                if (batteryPct >= 50) {
+                    batteryInfoTextView.setTextColor(Color.parseColor("#4CAF50"));
+                } else if (batteryPct >= 20) {
+                    batteryInfoTextView.setTextColor(Color.parseColor("#FFEB3B"));
+                } else {
+                    batteryInfoTextView.setTextColor(Color.parseColor("#F44336"));
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(batteryLevelReceiver);
     }
 
     public void showAlarmList(){

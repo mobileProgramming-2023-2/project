@@ -46,6 +46,17 @@
             android:src="@drawable/buds" />
 
         <TextView
+            android:id="@+id/batteryInfoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Battery Info"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="18dp"/>
+
+        <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,9 +82,9 @@
             android:textSize="15dp"
             android:visibility="gone"/>
 
-<!--        <ListView-->
-<!--            android:id="@+id/listview"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="353dp" />-->
+        <!--        <ListView-->
+        <!--            android:id="@+id/listview"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="353dp" />-->
     </LinearLayout>
 </layout>
