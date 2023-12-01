@@ -42,7 +42,7 @@ import java.util.Map;
 
 import smu.mp.project.R;
 
-//TODO: 스크롤 내린 상태 유지 오류 / 체크박스 오류 / 할 일 삭제 및 편집 / 캘린더에 투두 수
+//TODO: 스크롤 / 체크박스 오류 / 캘린더에 투두 수
 
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
@@ -139,7 +139,7 @@ public class TodoFragment extends Fragment {
     private void initializeTodoListView(View rootView) {
         // 할 일 목록과 어댑터 초기화
         todoItems = new ArrayList<>();
-        adapter = new TodoAdapter(getActivity(), todoItems, deleteListener, editListener);
+        adapter = new TodoAdapter(getActivity(), todoItems, deleteListener, editListener, this);
 
         // ListView 참조 및 어댑터 설정
         ListView listView = rootView.findViewById(R.id.todoListView);
@@ -221,7 +221,7 @@ public class TodoFragment extends Fragment {
         popupMenu.show();
     }
 
-   // 할 일 항목 편집 메소드
+    // 할 일 항목 편집 메소드
     private void editTodoItem(final int position) {
         List<TodoItem> itemsForDate = todoMap.get(selectedDate);
         if (itemsForDate == null || position >= itemsForDate.size()) {
@@ -394,7 +394,7 @@ public class TodoFragment extends Fragment {
                 showTimePickerDialog(textViewStartTime);
             }
         });
-        
+
         // 종료 시간 설정 Listener
         textViewEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -453,7 +453,7 @@ public class TodoFragment extends Fragment {
     }
 
     // 할 일 목록을 저장하는 메소드
-    private void saveTodoList() {
+    public void saveTodoList() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_TODO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 

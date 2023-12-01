@@ -16,20 +16,23 @@ import java.util.List;
 import smu.mp.project.R;
 
 
- // 할 일(TodoItem) 목록을 ListView에 바인딩하는 어댑터 클래스
+// 할 일(TodoItem) 목록을 ListView에 바인딩하는 어댑터 클래스
 public class TodoAdapter extends ArrayAdapter<TodoItem> {
     private Context context;
     private TodoFragment.TodoItemDeleteListener deleteListener;
     private TodoFragment.TodoItemEditListener editListener;
+    private TodoFragment todoFragment;
 
     // 생성자
     public TodoAdapter(Context context, List<TodoItem> items,
                        TodoFragment.TodoItemDeleteListener deleteListener,
-                       TodoFragment.TodoItemEditListener editListener) {
+                       TodoFragment.TodoItemEditListener editListener,
+                       TodoFragment todoFragment) {
         super(context, 0, items);
         this.context = context;
         this.deleteListener = deleteListener;
         this.editListener = editListener;
+        this.todoFragment = todoFragment;
     }
 
     // 각 TodoItem에 대한 뷰 설졍
@@ -47,6 +50,16 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
         CheckBox checkBox = convertView.findViewById(R.id.checkBox);
 
         TodoItem currentItem = getItem(position);
+        final int defaultTextColor = contentTextView.getCurrentTextColor();
+
+        // 체크박스 상태에 따른 텍스트 뷰 설정
+        if (currentItem.isChecked()) {
+            contentTextView.setPaintFlags(contentTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            contentTextView.setTextColor(Color.LTGRAY);
+        } else {
+            contentTextView.setPaintFlags(contentTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            contentTextView.setTextColor(defaultTextColor);
+        }
 
         // 데이터 설정
         contentTextView.setText(currentItem.getContent());
@@ -61,8 +74,12 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
         });
 
         // 체크박스 상호작용 설정
-        final int defaultTextColor = contentTextView.getCurrentTextColor();
+        checkBox.setOnCheckedChangeListener(null); // 리스너 초기화
+        checkBox.setChecked(currentItem.isChecked());
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            currentItem.setChecked(isChecked);
+            todoFragment.saveTodoList();
+
             if (isChecked) {
                 contentTextView.setPaintFlags(contentTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 contentTextView.setTextColor(Color.LTGRAY);
@@ -71,6 +88,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
                 contentTextView.setTextColor(defaultTextColor);
             }
         });
+
 
         return convertView;
     }
