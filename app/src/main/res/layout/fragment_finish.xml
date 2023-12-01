@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="5dp"
-            android:background="@color/white"
+            android:background="#FFFFFF"
             android:textSize="18dp"
             android:text="↪️   메인으로 돌아가기"
             android:layout_gravity="bottom"/>
