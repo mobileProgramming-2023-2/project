@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.view.View;
 import android.widget.ImageView;
 
+
 public class SummerAnimation {
 
     public static void startSunRotation(ImageView sunImage) {
