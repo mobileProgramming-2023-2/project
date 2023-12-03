@@ -50,7 +50,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
         CheckBox checkBox = convertView.findViewById(R.id.checkBox);
 
         TodoItem currentItem = getItem(position);
-        final int defaultTextColor = contentTextView.getCurrentTextColor();
+//        final int defaultTextColor = contentTextView.getCurrentTextColor();
 
         // 체크박스 상태에 따른 텍스트 뷰 설정
         if (currentItem.isChecked()) {
@@ -58,7 +58,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
             contentTextView.setTextColor(Color.LTGRAY);
         } else {
             contentTextView.setPaintFlags(contentTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            contentTextView.setTextColor(defaultTextColor);
+            contentTextView.setTextColor(Color.parseColor("#8a000000"));
         }
 
         // 데이터 설정
@@ -85,7 +85,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
                 contentTextView.setTextColor(Color.LTGRAY);
             } else {
                 contentTextView.setPaintFlags(contentTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                contentTextView.setTextColor(defaultTextColor);
+                contentTextView.setTextColor(Color.parseColor("#8a000000"));
             }
         });
 

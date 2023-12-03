@@ -42,8 +42,6 @@ import java.util.Map;
 
 import smu.mp.project.R;
 
-//TODO: 스크롤 / 체크박스 오류 / 캘린더에 투두 수
-
 // 할 일 목록 관리하는 UI Fragment
 public class TodoFragment extends Fragment {
     // Preference 파일과 키 이름 정의
