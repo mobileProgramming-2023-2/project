@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment {
 
         updateSeasonView(view, currentSeason);
 
-
         FrameLayout homeLayout = view.findViewById(R.id.home);
         registerForContextMenu(homeLayout);
         registerForContextMenu(characterImage);
