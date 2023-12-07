@@ -58,7 +58,6 @@ public class AlarmItemBuilder {
     }
     public AlarmItemBuilder setEarSoundFlag(boolean earSoundFlag) {
         alarmItem.setEarSoundFlag(earSoundFlag);
-        // When setting the earSoundFlag, also set the basicSoundFlag
         return this;
     }
     public AlarmItemBuilder setVibFlag(boolean vibFlag) {

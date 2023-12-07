@@ -48,12 +48,16 @@ public class AlarmService extends Service {
     Vibrator vibrator;
     boolean basicFlag, earFlag;
 
+
+    // 서비스 바인딩 시 호출되는 메서드
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+
+    // 서비스 생성 시 호출되는 메서드, 알람 설정 및 wake lock 획득
     @Override
     public void onCreate() {
         super.onCreate();
@@ -78,7 +82,7 @@ public class AlarmService extends Service {
         }
     };
 
-    //여기를 수정?
+    // 서비스 시작 시 호출되는 메서드, 알람 설정 및 음악 서비스 시작
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         alarmItem = (AlarmItem) intent.getSerializableExtra("alarmItem");
@@ -91,9 +95,9 @@ public class AlarmService extends Service {
         earFlag = alarmItem.isEarSoundFlag();
 
         if (earFlag) {
-            Intent serviceIntent = new Intent(this, MusicService.class);
-            startService(serviceIntent);
-            bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE);
+            Intent service = new Intent(AlarmService.this, MusicService.class);
+            startService(service);
+            bindService(service, conn, BIND_AUTO_CREATE);
         }
 
         // 기존 로직 유지
@@ -107,7 +111,7 @@ public class AlarmService extends Service {
 
     private boolean isBound = false;
 
-    // 일반 알람
+    // 일반 알람 소리 시작 메서드
     private void startAlarm(String alarmSoundUri) {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
@@ -120,18 +124,18 @@ public class AlarmService extends Service {
             e.printStackTrace();
         }
 
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-            mediaPlayer.setLooping(true);
-            try {
-                mediaPlayer.prepare(); // prepare는 MediaPlayer.create를 사용할 경우 필요하지 않음
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mediaPlayer.start();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+        mediaPlayer.setLooping(true);
+        try {
+            mediaPlayer.prepare(); // prepare는 MediaPlayer.create를 사용할 경우 필요하지 않음
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mediaPlayer.start();
 
     }
 
-    // 설정된 알람 요일과 현재 요일을 비교하여 알람을 울리지 결정하는 method
+    // 설정된 알람 요일과 현재 요일을 비교하여 알람 여부 결정
     public void checkAlarmDayWithToday() {
         Calendar calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_WEEK);
@@ -153,8 +157,7 @@ public class AlarmService extends Service {
         }
     }
 
-    //checkAlarmDayWithToday에서 사용
-    //알람이 울릴 때 실행되는 Thread, AudioManager를 설정하고 Ringtone을 재생
+    // 알람 시작 스레드, AudioManager 설정 및 알람 소리 재생
     public void startAlarmThread() {
         new Thread(() -> {
             setAudioManager();
@@ -162,7 +165,11 @@ public class AlarmService extends Service {
                 setVibrate();
             } else {
                 // 진동이 설정되어 있지 않은 경우에만 소리를 재생
-                if (!earFlag) {
+                if (basicFlag) {
+                    startRingtone(alarmItem.getAlarmSoundUri());
+                }
+                if (earFlag) {
+                    String soundUri = "android.resource://" + getPackageName() + "/" + R.raw.hello;
                     startRingtone(alarmItem.getAlarmSoundUri());
                 }
             }
@@ -171,7 +178,7 @@ public class AlarmService extends Service {
     }
 
 
-    // 알람 소리의 볼륨을 조절한다.
+    // 알람 소리 볼륨 조절 메서드
     public void setAudioManager(){
         if (!basicFlag && !earFlag) return;
 
@@ -185,7 +192,7 @@ public class AlarmService extends Service {
     }
 
 
-    //MediaPlayer를 사용하여 알람 소리를 재생한다.
+    // MediaPlayer를 사용해 알람 소리 재생
     private void startRingtone(String alarmSoundUri) {
         // MediaPlayer 객체 초기화 및 설정
         if (mediaPlayer == null) {
@@ -204,9 +211,8 @@ public class AlarmService extends Service {
         }
     }
 
-
+    // MediaPlayer의 오디오 속성 설정 메서드
     private void setMediaPlayerAttributes() {
-        // 오디오 속성 설정
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
@@ -221,7 +227,7 @@ public class AlarmService extends Service {
     }
 
 
-    // AlarmOnActivity를 시작하여 사용자에게 알람을 알리는 화면을 표시한다.
+    // 알람 활성화 액티비티 시작 메서드
     public void intentAlarmOnActivity() {
         Intent alarmOnIntent = new Intent(this, AlarmOnActivity.class);
         alarmOnIntent.putExtra("alarmItem", alarmItem)
@@ -230,7 +236,7 @@ public class AlarmService extends Service {
     }
 
 
-    //Notification을 설정하는 메서드로, NotificationChannel을 생성하고 Builder를 초기화 한다.
+    // 알림 설정 메서드, NotificationChannel 생성 및 Builder 초기화
     public void setNotification() {
         Intent intent = new Intent(this, AlarmOnActivity.class);
 
@@ -256,6 +262,7 @@ public class AlarmService extends Service {
     }
 
 
+    // Notification Builder 설정 메서드
     public void setNotificationBuilder(PendingIntent pendingIntent) {
         builder.setContentTitle("토끼송")
                 .setTicker("알람 on")
@@ -268,7 +275,7 @@ public class AlarmService extends Service {
     }
 
 
-    // 진동을 시작하는 Method
+    // 진동 시작 메서드
     public void setVibrate() {
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null) {
@@ -280,11 +287,13 @@ public class AlarmService extends Service {
     }
 
 
+    // 진동 중지 메서드
     public void stopVibrate() {
         if (vibrator != null)
             vibrator.cancel();
     }
 
+    // Wake lock 획득 메서드
     private void acquireWakeLock() {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager != null) {
@@ -296,6 +305,7 @@ public class AlarmService extends Service {
         }
     }
 
+    // 서비스 종료 시 호출되는 메서드, MediaPlayer 및 진동 중지, wake lock 해제
     @Override
     public void onDestroy() {
         stopMediaPlayer();
@@ -310,6 +320,7 @@ public class AlarmService extends Service {
         super.onDestroy();
     }
 
+    // Wake lock 해제 메서드
     private void releaseWakeLock() {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager != null) {
@@ -321,6 +332,7 @@ public class AlarmService extends Service {
         }
     }
 
+    // MediaPlayer 중지 메서드
     public void stopMediaPlayer() {
         if (mediaPlayer != null) {
             mediaPlayer.release();
@@ -328,6 +340,7 @@ public class AlarmService extends Service {
         }
     }
 
+    // Notification Channel 생성 메서드 (Android O 이상에서 사용)
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(){
         String channelId = "AlarmItem";

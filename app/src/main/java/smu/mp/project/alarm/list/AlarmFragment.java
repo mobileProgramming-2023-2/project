@@ -235,14 +235,4 @@ public class AlarmFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
     }
 
-    //AlarmItem을 리스트에 추가하는 메서드
-//    public void addItem(AlarmItem alarmItem){
-//        items.add(alarmItem);
-//        ArrayAdapter<AlarmItem> adapter = (ArrayAdapter<AlarmItem>) listview.getAdapter();
-//        adapter.notifyDataSetChanged();
-//    }
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes
