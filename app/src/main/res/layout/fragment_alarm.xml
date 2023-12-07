@@ -81,10 +81,10 @@
             android:textStyle="bold"
             android:textSize="15dp"
             android:visibility="gone"/>
-
 <!--        <ListView-->
 <!--            android:id="@+id/listview"-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="353dp" />-->
+
     </LinearLayout>
 </layout>
