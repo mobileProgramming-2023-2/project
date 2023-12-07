@@ -10,5 +10,4 @@
         android:layout_width="300dp"
         android:layout_height="490dp"
         android:src="@drawable/show1"/>
-
 </LinearLayout>

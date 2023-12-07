@@ -11,6 +11,7 @@ public class TodoItem {
 
     // 생성자
     public TodoItem(String content, String memo, String startTime, String endTime) {
+
         this.content = content;
         this.memo = memo;
         this.startTime = startTime;

@@ -28,6 +28,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
     }
 
     // 각 TodoItem의 뷰를 반환하는 메소드
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -84,10 +85,11 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
     }
     
     // 팝업메뉴 메소드
+
     private void showPopupMenu(View view, final int position) {
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.getMenuInflater().inflate(R.menu.todo_popup_menu, popupMenu.getMenu());
-
+        
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -105,6 +107,7 @@ public class TodoAdapter extends ArrayAdapter<TodoItem> {
 
                 return false;
             }
+
         });
 
         popupMenu.show();

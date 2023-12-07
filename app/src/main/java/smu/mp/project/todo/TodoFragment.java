@@ -53,11 +53,12 @@ public class TodoFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_todo, container, false);
 
-        // 캘린더 뷰 커스텀 //
+
         MaterialCalendarView calendarView = rootView.findViewById(R.id.calendarView);
         TextView todoListTitle = rootView.findViewById(R.id.todoListTitle);
 
@@ -165,7 +166,7 @@ public class TodoFragment extends Fragment {
 
     // 할 일 항목 삭제 메소드
     private void deleteTodoItem(final int position) {
-        // 삭제 로직
+
     }
 
     // 할 일 입력 Dialog 표시 메소드
@@ -202,6 +203,7 @@ public class TodoFragment extends Fragment {
                 String startTime = textViewStartTime.getText().toString();
                 String endTime = textViewEndTime.getText().toString();
 
+
                 // 예외 처리
                 if (content.isEmpty()) {  // 할 일 내용 비어 있으면 경고
                     new AlertDialog.Builder(getContext())
@@ -236,7 +238,7 @@ public class TodoFragment extends Fragment {
                 showTimePickerDialog(textViewStartTime);
             }
         });
-        
+
         // 종료 시간 설정 Listener
         textViewEndTime.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -234,5 +234,4 @@ public class AlarmFragment extends Fragment {
         noAlarmText.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
     }
-
 }
