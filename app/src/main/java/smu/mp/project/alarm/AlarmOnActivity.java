@@ -41,7 +41,7 @@ public class AlarmOnActivity extends AppCompatActivity {
         setView();
 
         Intent preIntent = getIntent();
-        alarmItem = (AlarmItem) preIntent.getSerializableExtra("alarm");
+        alarmItem = (AlarmItem) preIntent.getSerializableExtra("alarmItem");
         setTimeView();
     }
 

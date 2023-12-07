@@ -7,12 +7,15 @@ import androidx.fragment.app.Fragment;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +39,8 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     final int REQUEST_CODE_BASIC_SOUND = 1000;
     private static final int RINGTONE_PICKER_REQUEST_CODE = 1;
 
+    private Ringtone previewRingtone;
+
     Intent preIntent;
     AlarmItem newAlarm, updateAlarm;
     int dayTrue, dayFalse;
@@ -43,8 +48,9 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     int alarmHour, alarmMinute, alarmVolume;
     TimePicker timePicker;
     EditText title;
-    Switch allDaySwitch, basicSoundSwitch, earSoundSwitch, vibSwitch;
-    boolean allDayFlag, basicSoundFlag, earSoundFlag, vibFlag;
+    Switch allDaySwitch,
+            basicSoundSwitch, earSoundSwitch, vibSwitch;
+    boolean allDayFlag, basicSoundFlag = false, earSoundFlag, vibFlag;
 
     Button[] dayButton = new Button[8];
     boolean[] dayArr = new boolean[8];
@@ -91,6 +97,12 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopPreviewRingtone();  // 화면을 떠날 때 미리듣기 중지
+    }
+
     public void setAlarmView(){
         timePicker.setCurrentHour(updateAlarm.getHour());
         timePicker.setCurrentMinute(updateAlarm.getMinute());
@@ -122,6 +134,8 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
                 .setBasicSoundFlag(basicSoundFlag)
                 .setEarSoundFlag(earSoundFlag)
                 .setVibFlag(vibFlag)
+                .setTotalFlag(true)
+                .setVibFlag(vibSwitch.isChecked())
                 .build();
 
         // 추가된 로그
@@ -199,6 +213,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         int viewId = v.getId();
         if (viewId == R.id.saveButton){
+            stopPreviewRingtone();
             setAlarm();
             if (REQUEST_STATE.equals("update")){
                 newAlarm.setId(updateAlarm.getId());
@@ -237,7 +252,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         timePicker.setOnTimeChangedListener(new timeChangedListener());
     }
 
-    public void setRingtonePicker(){
+    public void setRingtonePicker() {
         alarmsoundButton = findViewById(R.id.ringtoneButton);
         alarmsoundButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,6 +265,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             }
         });
     }
+
 
     public void setObjectView(){
         title = findViewById(R.id.title);
@@ -289,15 +305,87 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void basicSoundSwitchAction(boolean isChecked) {
-        // basicSoundSwitch 상태에 따라 수행할 동작 구현
+        if (isChecked) {
+            // 기본 사운드를 사용하도록 설정
+            alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
+            alarmSoundName = "기본 알람음"; // 기본 알람음의 이름을 설정 (원하는 이름으로 변경 가능)
+            basicSoundFlag = true;
+            if (earSoundSwitch.isChecked()) {
+                showConflictDialog("이어폰 알람이 설정된 상태입니다. 기본 알람을 설정하시겠습니까?", false);
+            } else {
+                alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
+                basicSoundFlag = true;
+            }
+        } else {
+            // 기본 사운드를 사용하지 않도록 설정 (사용자 정의한 알람음을 선택한 경우 등)
+            alarmSoundUri = null;
+            alarmSoundName = null;
+        }
+        //playAlarm(); // 알람 울리는 로직 호출
     }
 
     private void earSoundSwitchAction(boolean isChecked) {
-        // earSoundSwitch 상태에 따라 수행할 동작 구현
+        earSoundFlag = true;
+        basicSoundFlag = false;
+        if (isChecked) {
+            if (basicSoundSwitch.isChecked()) {
+                showConflictDialog("기본 알람이 설정된 상태입니다. 이어폰 알람을 설정하시겠습니까?", true);
+            } else {
+                earSoundFlag = true;
+                basicSoundFlag = false;
+            }
+        }
+    }
+
+    private void showConflictDialog(String message, boolean isEarSound) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("알람 설정")
+                .setMessage(message)
+                .setPositiveButton("예", (dialog, which) -> {
+                    if (isEarSound) {
+                        earSoundSwitch.setChecked(true);
+                        basicSoundSwitch.setChecked(false);
+                    } else {
+                        earSoundSwitch.setChecked(false);
+                    }
+                })
+                .setNegativeButton("아니오", (dialog, which) -> {
+                    if (isEarSound) {
+                        earSoundSwitch.setChecked(false);
+                    } else {
+                        basicSoundSwitch.setChecked(false);
+                    }
+                })
+                .show();
     }
 
     private void vibSwitchAction(boolean isChecked) {
-        // vibSwitch 상태에 따라 수행할 동작 구현
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (isChecked) {
+            // 진동 옵션이 켜진 경우 진동 울릴 수 있도록 설정
+            long[] pattern = {0, 500, 1000}; // 대기, 진동, 대기 시간 (밀리초 단위)
+            vibrator.vibrate(pattern, -1); // -1은 반복 없음을 의미
+        } else {
+            // 진동 옵션을 끈 경우, 진동을 중지시킴
+            vibrator.cancel();
+        }
+    }
+
+    // 알람이 울리는 로직
+    private void playAlarm() {
+        if (alarmSoundUri != null) {
+            // Uri를 이용하여 알람음을 재생하는 코드
+            Ringtone ringtone = RingtoneManager.getRingtone(this, Uri.parse(alarmSoundUri));
+            if (ringtone != null) {
+                ringtone.play();
+            }
+        } else {
+            // 기본 알람음 재생 로직 (예시: 기본 알람 소리 재생)
+            Ringtone defaultRingtone = RingtoneManager.getRingtone(this, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
+            if (defaultRingtone != null) {
+                defaultRingtone.play();
+            }
+        }
     }
 
 
@@ -331,21 +419,24 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RINGTONE_PICKER_REQUEST_CODE && resultCode == RESULT_OK && data != null){
+        if (requestCode == RINGTONE_PICKER_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Uri ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             saveSelectedRingtoneUri(ringtoneUri);
-
             String ringtoneName = getRingtoneName(ringtoneUri);
-
             saveSelectedRingtone(ringtoneName, ringtoneUri);
-
-            // 선택한 알람음을 텍스트뷰에 표시
             showSelectedRingtone(ringtoneName);
         }
     }
+
+    private void stopPreviewRingtone() {
+        if (previewRingtone != null && previewRingtone.isPlaying()) {
+            previewRingtone.stop();
+        }
+    }
+
 
     private String getRingtoneName(Uri ringtoneUri) {
         if (ringtoneUri != null) {
@@ -385,8 +476,4 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         builder.setNegativeButton("아니오", null);
         builder.show();
     }
-
-
-
-
 }

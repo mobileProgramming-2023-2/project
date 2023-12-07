@@ -28,7 +28,7 @@ public interface AlarmDao {
     @Delete
     Completable delete(AlarmItem alarm);
 
-    @Query("SELECT * FROM alarm_table")
+    @Query("SELECT * FROM alarm_table ORDER BY hour, minute ASC")
     LiveData<List<AlarmItem>> getAllAlarms();
 
     @Query("SELECT * FROM alarm_table")
@@ -36,4 +36,5 @@ public interface AlarmDao {
 
     @Query("SELECT * FROM alarm_table WHERE id = :id")
     Single<AlarmItem> getAlarm(int id);
+
 }
