@@ -94,7 +94,12 @@ public class AlarmService extends Service {
         basicFlag = alarmItem.isBasicSoundFlag();
         earFlag = alarmItem.isEarSoundFlag();
 
-        if (earFlag) {
+        // 이어폰 연결 상태 확인
+        boolean isEarphoneConnected = isWiredHeadsetConnected();
+
+        // 이어폰이 연결되어 있으면 earFlag를 true로 설정
+        if (isEarphoneConnected) {
+            earFlag = true;
             Intent service = new Intent(AlarmService.this, MusicService.class);
             startService(service);
             bindService(service, conn, BIND_AUTO_CREATE);
@@ -107,6 +112,11 @@ public class AlarmService extends Service {
         checkAlarmDayWithToday();
 
         return START_NOT_STICKY;
+    }
+
+    private boolean isWiredHeadsetConnected() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        return audioManager.isWiredHeadsetOn();
     }
 
     private boolean isBound = false;
