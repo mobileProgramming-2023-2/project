@@ -307,13 +307,17 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
     private void basicSoundSwitchAction(boolean isChecked) {
         if (isChecked) {
             // 기본 사운드를 사용하도록 설정
-            alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
-            alarmSoundName = "기본 알람음"; // 기본 알람음의 이름을 설정 (원하는 이름으로 변경 가능)
-            basicSoundFlag = true;
+            if (alarmSoundUri != null) {
+                basicSoundFlag = true;
+            }
+            else {
+                alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
+                alarmSoundName = "기본 알람음"; // 기본 알람음의 이름을 설정 (원하는 이름으로 변경 가능)
+                basicSoundFlag = true;
+            }
             if (earSoundSwitch.isChecked()) {
                 showConflictDialog("이어폰 알람이 설정된 상태입니다. 기본 알람을 설정하시겠습니까?", false);
             } else {
-                alarmSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
                 basicSoundFlag = true;
             }
         } else {
@@ -426,6 +430,7 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
             Uri ringtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             saveSelectedRingtoneUri(ringtoneUri);
             String ringtoneName = getRingtoneName(ringtoneUri);
+            alarmSoundUri = ringtoneUri.toString();
             saveSelectedRingtone(ringtoneName, ringtoneUri);
             showSelectedRingtone(ringtoneName);
         }
@@ -452,10 +457,12 @@ public class AlarmAddActivity extends AppCompatActivity implements View.OnClickL
         this.alarmSoundName = ringtoneName;
         this.selectedRingtoneUri = ringtoneUri;
     }
+
     private void showSelectedRingtone(String ringtoneName){
         TextView alarmSoundNameTextView = findViewById(R.id.ringtoneText);
         alarmSoundNameTextView.setText("선택한 알람음: " + ringtoneName);
     }
+
     private void saveSelectedRingtoneUri(Uri ringtoneUri){
         if (ringtoneUri != null){
             this.selectedRingtoneUri = ringtoneUri;

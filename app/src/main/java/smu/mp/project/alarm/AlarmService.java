@@ -142,7 +142,8 @@ public class AlarmService extends Service {
         String alarmDay = alarmItem.getDay();
 
         if (earFlag) {
-            // earFlag가 true이면 바로 startAlarmThread를 호출하지 않음
+            // earFlag가 true이면 바로 intentAlarmOnActivity를 호출
+            intentAlarmOnActivity();
             return;
         }
 
@@ -165,11 +166,7 @@ public class AlarmService extends Service {
                 setVibrate();
             } else {
                 // 진동이 설정되어 있지 않은 경우에만 소리를 재생
-                if (basicFlag) {
-                    startRingtone(alarmItem.getAlarmSoundUri());
-                }
-                if (earFlag) {
-                    String soundUri = "android.resource://" + getPackageName() + "/" + R.raw.hello;
+                if (basicFlag && !earFlag) {
                     startRingtone(alarmItem.getAlarmSoundUri());
                 }
             }
@@ -186,9 +183,12 @@ public class AlarmService extends Service {
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
         int volume = alarmItem.getVolume();
 
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM,
-                maxVol * volume / 100,
-                AudioManager.FLAG_PLAY_SOUND);
+        if (earFlag) { }
+        else {
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM,
+                    maxVol * volume / 100,
+                    AudioManager.FLAG_PLAY_SOUND);
+        }
     }
 
 
