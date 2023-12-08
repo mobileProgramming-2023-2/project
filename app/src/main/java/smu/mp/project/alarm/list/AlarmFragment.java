@@ -63,7 +63,7 @@ public class AlarmFragment extends Fragment {
 
         noAlarmText = view.findViewById(R.id.noAlarmText);
 
-        alarmAdapter = new AlarmAdapter();
+        alarmAdapter = new AlarmAdapter(getActivity());
 
         recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -80,9 +80,7 @@ public class AlarmFragment extends Fragment {
         });
 
         alarmAdapter.setOnSwitchCheckedChangeListener(alarmItem -> {
-            alarmViewModel.update(alarmItem);
-            String requestMsg = alarmItem.isTotalFlag() ? "reboot" : "cancel";
-            updateAlarmManager(alarmItem, requestMsg);
+            updateAlarmManager(alarmItem, alarmItem.isTotalFlag() ? "create" : "cancel");
         });
 
         batteryInfoTextView = view.findViewById(R.id.batteryInfoTextView);
@@ -147,17 +145,20 @@ public class AlarmFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
 //        if (requestCode != -1) return;
+        if (data == null) return;
 
         AlarmItem alarmItem = (AlarmItem) data.getSerializableExtra("alarmItem");
 
         switch (requestCode){
             case CREATE_ALARM_REQUEST:
+                alarmItem.setTotalFlag(true);
                 alarmViewModel.insert(alarmItem);
                 Toast.makeText(context,
                         alarmItem.getHour() + "시 " + alarmItem.getMinute() + "분에 알람을 설정하였습니다.",
                         Toast.LENGTH_SHORT).show();
                 break;
             case UPDATE_ALARM_REQUEST:
+                alarmItem.setTotalFlag(true);
                 alarmViewModel.update(alarmItem);
                 Toast.makeText(context,
                         "알람을 수정했습니다.",

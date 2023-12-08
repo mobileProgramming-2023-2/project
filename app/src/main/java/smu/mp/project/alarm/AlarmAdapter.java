@@ -1,10 +1,16 @@
 package smu.mp.project.alarm;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
@@ -22,8 +28,12 @@ public class AlarmAdapter extends ListAdapter<AlarmItem, AlarmAdapter.AlarmViewH
 
     private OnItemClickListener itemClickListener;
     private OnSwitchCheckedChangeListener switchCheckedChangeListener;
-    public AlarmAdapter(){
+    private Context context;
+
+    // 생성자에서 Context 추가
+    public AlarmAdapter(Context context){
         super(DIFF_CALLBACK);
+        this.context = context;
     }
     private static final DiffUtil.ItemCallback<AlarmItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<AlarmItem>() {
         @Override
@@ -59,13 +69,14 @@ public class AlarmAdapter extends ListAdapter<AlarmItem, AlarmAdapter.AlarmViewH
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
         AlarmItem alarmItem = getItem(position);
         holder.listItemBinding.setAlarmItem(alarmItem);
-
+        holder.listItemBinding.totalSwitch.setChecked(alarmItem.isTotalFlag());
     }
 
-    public class AlarmViewHolder extends RecyclerView.ViewHolder{
+
+    public class AlarmViewHolder extends RecyclerView.ViewHolder {
         ListItemBinding listItemBinding;
 
-        public AlarmViewHolder(@NonNull ListItemBinding listItemBinding){
+        public AlarmViewHolder(@NonNull ListItemBinding listItemBinding) {
             super(listItemBinding.getRoot());
             this.listItemBinding = listItemBinding;
 
@@ -75,19 +86,50 @@ public class AlarmAdapter extends ListAdapter<AlarmItem, AlarmAdapter.AlarmViewH
                     itemClickListener.onItemClicked(getItem(position));
                 }
             });
+
+            listItemBinding.totalSwitch.setOnCheckedChangeListener(null); // 리스너 일시적으로 해제
+
             listItemBinding.totalSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 int position = getBindingAdapterPosition();
-                if (switchCheckedChangeListener != null && position != RecyclerView.NO_POSITION) {
+                if (position != RecyclerView.NO_POSITION) {
                     AlarmItem alarmItem = getAlarmAt(position);
-                    alarmItem.setTotalFlag(isChecked);
-                    switchCheckedChangeListener.onSwitchCheckedChanged(alarmItem);
+                    if (alarmItem != null) {
+                        alarmItem.setTotalFlag(isChecked);
+                        switchCheckedChangeListener.onSwitchCheckedChanged(alarmItem);
 
-                    int color = isChecked ? Color.parseColor("#2A6DF3") : Color.parseColor("#dddddd");
-                    listItemBinding.hour.setTextColor(color);
-                    listItemBinding.minute.setTextColor(color);
+                        // 비동기 처리로 변경
+                        updateAlarmStateAsync(alarmItem, isChecked);
+                    }
                 }
             });
         }
+    }
+
+    // 알람 상태를 비동기적으로 업데이트
+    private static final int MY_PERMISSIONS_REQUEST_SET_ALARM = 1;
+
+    private void updateAlarmStateAsync(AlarmItem alarmItem, boolean isActive) {
+        new Thread(() -> {
+            try {
+                // Intent 호출 시 Context의 시작 방식 확인
+                Intent alarmIntent = new Intent(context, AlarmManagerActivity.class);
+                alarmIntent.putExtra("alarmItem", alarmItem);
+                alarmIntent.putExtra("request", isActive ? "create" : "cancel");
+
+                // Context를 사용하여 Activity를 시작하는 경우 FLAG_ACTIVITY_NEW_TASK 필요
+                alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                // 권한 체크 추가
+                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.SET_ALARM) != PackageManager.PERMISSION_GRANTED) {
+                    // 권한 요청
+                    ActivityCompat.requestPermissions((Activity) context, new String[]{android.Manifest.permission.SET_ALARM}, MY_PERMISSIONS_REQUEST_SET_ALARM);
+                } else {
+                    context.startActivity(alarmIntent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace(); // 로그를 기록
+            }
+        }).start();
     }
 
     public interface OnItemClickListener {

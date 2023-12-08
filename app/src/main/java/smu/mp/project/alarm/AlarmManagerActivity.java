@@ -52,13 +52,23 @@ public class AlarmManagerActivity extends AppCompatActivity {
     }
 
     public boolean checkOnAlarm(){
-        PendingIntent checkIntent = PendingIntent.getBroadcast(context,
-                alarmItem.getId(),
-                receiverIntent,
-                PendingIntent.FLAG_NO_CREATE);
-        if (checkIntent == null) return false;
-        return true;
+        PendingIntent checkIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            checkIntent = PendingIntent.getBroadcast(context,
+                    alarmItem.getId(),
+                    receiverIntent,
+                    PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            checkIntent = PendingIntent.getBroadcast(context,
+                    alarmItem.getId(),
+                    receiverIntent,
+                    PendingIntent.FLAG_NO_CREATE);
+        }
+
+        return checkIntent != null;
     }
+
+
 
     public void setAlarmManager(){
         setCalendar();
@@ -78,10 +88,18 @@ public class AlarmManagerActivity extends AppCompatActivity {
     }
 
     public void requestReceiver(int requestCode){
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                requestCode,
-                receiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(context,
+                    requestCode,
+                    receiverIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context,
+                    requestCode,
+                    receiverIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //API 23 이상
@@ -95,12 +113,22 @@ public class AlarmManagerActivity extends AppCompatActivity {
         }
     }
 
+
     public void cancleAlarm(){
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                alarmItem.getId(),
-                receiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(context,
+                    alarmItem.getId(),
+                    receiverIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context,
+                    alarmItem.getId(),
+                    receiverIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
     }
+
 }

@@ -64,6 +64,8 @@ public class AlarmItemBuilder {
         alarmItem.setVibFlag(vibFlag);
         return this;
     }
+
+
     public AlarmItem build() {
         return this.alarmItem;
     }

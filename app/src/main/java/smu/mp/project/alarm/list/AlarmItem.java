@@ -117,8 +117,6 @@ public class AlarmItem implements Serializable {
         this.basicSoundFlag = basicSoundFlag;
     }
 
-
-
     public boolean isEarSoundFlag() {
         return earSoundFlag;
     }
@@ -135,6 +133,11 @@ public class AlarmItem implements Serializable {
         this.vibFlag = vibFlag;
     }
 
+    public int compareTo(AlarmItem other) {
+        int thisTime = this.hour * 60 + this.minute;
+        int otherTime = other.hour * 60 + other.minute;
+        return Integer.compare(thisTime, otherTime);
+    }
 
     @Override
     public String toString() {
@@ -155,4 +158,3 @@ public class AlarmItem implements Serializable {
                 '}';
     }
 }
-
