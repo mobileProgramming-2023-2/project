@@ -12,7 +12,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,17 +30,37 @@ public class ResFragment extends Fragment {
         MyGridAdapter gAdapter = new MyGridAdapter(getActivity());
         gv.setAdapter(gAdapter);
 
+        // WebView 설정
+        WebView webView = view.findViewById(R.id.webView);
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        Button closeWebViewButton = view.findViewById(R.id.closeWebViewButton);
+        closeWebViewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.webViewContainer).setVisibility(View.GONE);
+            }
+        });
 
         ImageView bannerImage = view.findViewById(R.id.banner);
-
-
         bannerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snoway.sookmyung.ac.kr/login.jsp"));
-                startActivity(browserIntent);
+                view.findViewById(R.id.webViewContainer).setVisibility(View.VISIBLE);
+                webView.loadUrl("https://snoway.sookmyung.ac.kr/login.jsp");
             }
         });
+
+//        ImageView bannerImage = view.findViewById(R.id.banner);
+//
+//        bannerImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snoway.sookmyung.ac.kr/login.jsp"));
+//                startActivity(browserIntent);
+//            }
+//        });
 
         return view;
     }

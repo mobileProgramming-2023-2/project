@@ -15,32 +15,55 @@
         android:src="@drawable/banner"
         android:layout_marginBottom="10dp"
         />
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        >-->
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="right"-->
-<!--            android:gravity="right"-->
-<!--            android:text="강연정보"-->
-<!--            android:layout_marginRight="280dp"-->
-<!--            android:layout_marginLeft="10dp"-->
-<!--            android:textSize="17dp"-->
-<!--            android:textColor="#000000"-->
-<!--            />-->
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="right"-->
-<!--        android:gravity="right"-->
-<!--        android:text="최신순"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        />-->
-<!--    </LinearLayout>-->
+    <RelativeLayout
+        android:id="@+id/webViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- 닫기 버튼 -->
+        <Button
+            android:id="@+id/closeWebViewButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/close"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        >-->
+
+    <!--        <TextView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="right"-->
+    <!--            android:gravity="right"-->
+    <!--            android:text="강연정보"-->
+    <!--            android:layout_marginRight="280dp"-->
+    <!--            android:layout_marginLeft="10dp"-->
+    <!--            android:textSize="17dp"-->
+    <!--            android:textColor="#000000"-->
+    <!--            />-->
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="right"-->
+    <!--        android:gravity="right"-->
+    <!--        android:text="최신순"-->
+    <!--        android:layout_marginBottom="10dp"-->
+    <!--        />-->
+    <!--    </LinearLayout>-->
 
     <GridView
         android:id="@+id/gridView01"
@@ -49,13 +72,18 @@
         android:gravity="center"
         android:numColumns="3" />
 
-<!--    <GridView-->
-<!--        android:id="@+id/gridView01"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:numColumns="3"-->
-<!--        android:gravity="center"-->
-<!--        android:horizontalSpacing="10dp"-->
-<!--        android:verticalSpacing="10dp"-->
-<!--        android:columnWidth="100dp" />-->
+    <!--    <GridView-->
+    <!--        android:id="@+id/gridView01"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:numColumns="3"-->
+    <!--        android:gravity="center"-->
+    <!--        android:horizontalSpacing="10dp"-->
+    <!--        android:verticalSpacing="10dp"-->
+    <!--        android:columnWidth="100dp" />-->
+
+
+
+
+
 </LinearLayout>
