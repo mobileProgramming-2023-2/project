@@ -5,15 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.bluetooth.BluetoothA2dp;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothHeadset;
-import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -22,7 +17,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -30,7 +24,6 @@ import androidx.annotation.RequiresApi;
 import java.io.IOException;
 import java.util.Calendar;
 
-import smu.mp.project.MainActivity;
 import smu.mp.project.R;
 import smu.mp.project.alarm.list.AlarmItem;
 import smu.mp.project.alarm.list.MusicService;
@@ -274,7 +267,7 @@ public class AlarmService extends Service {
 
     // Notification Builder 설정 메서드
     public void setNotificationBuilder(PendingIntent pendingIntent) {
-        builder.setContentTitle("토끼송")
+        builder.setContentTitle("송토끼")
                 .setTicker("알람 on")
                 .setSmallIcon(R.drawable.img_rabbitsong)
                 .setContentIntent(pendingIntent)

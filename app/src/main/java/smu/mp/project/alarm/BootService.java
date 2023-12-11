@@ -122,7 +122,7 @@ public class BootService extends Service {
     }
 
     public void setNotificationBuilder(){
-        builder.setContentTitle("토끼송")
+        builder.setContentTitle("송토끼")
                 .setContentText("알람 재부팅 중...")
                 .setSmallIcon(R.drawable.img_rabbitsong);
         notification = builder.build();
