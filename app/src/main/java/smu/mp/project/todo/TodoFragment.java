@@ -26,6 +26,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -468,10 +469,16 @@ public class TodoFragment extends Fragment {
         if (!todoMapJson.isEmpty()) {
             Gson gson = new Gson();
             Type type = new TypeToken<Map<String, List<TodoItem>>>() {}.getType();
-            todoMap = gson.fromJson(todoMapJson, type); // JSON을 Map으로 변환
+            try {
+                todoMap = gson.fromJson(todoMapJson, type); // JSON을 안전하게 Map으로 변환
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+                todoMap = new HashMap<>(); // 형식 오류 시 빈 맵으로 초기화
+            }
         } else {
             todoMap = new HashMap<>();
         }
         updateTodoListForSelectedDate(selectedDate);
     }
+
 }
